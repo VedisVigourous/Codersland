@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;600;700;800&family=Pirata+One&family=Rye&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-baroque: 'Baroque text JF', 'Pirata One', 'Cinzel Decorative', cursive, serif;
+    --font-sheepman: 'Sheepman wo3 regular', 'Sheepman', 'Rye', 'Bebas Neue', sans-serif;
+    --font-techno: 'Black Ops One', sans-serif;
+    --font-body: 'Outfit', 'Cinzel', sans-serif;
+  }
+
+  html, body {
+    background-color: #050508;
+    color: #f4ede0;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100vw;
+  }
+}
+
+/* 3D Scene Container */
+.scene-3d {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Custom Baroque & Sheepman Aliases */
+.font-baroque {
+  font-family: var(--font-baroque);
+}
+
+.font-sheepman {
+  font-family: var(--font-sheepman);
+}
+
+.font-techno {
+  font-family: var(--font-techno);
+}
+
+/* Alice in Borderland Red Laser Grid & Arena Fog */
+.bg-borderland-arena {
+  background: 
+    radial-gradient(ellipse at 50% 20%, rgba(214, 0, 28, 0.32) 0%, rgba(139, 0, 0, 0.15) 45%, rgba(5, 5, 8, 0.98) 75%),
+    linear-gradient(180deg, rgba(5,5,8,0.7) 0%, rgba(5,5,8,1) 100%),
+    repeating-linear-gradient(90deg, rgba(255, 17, 58, 0.035) 0px, rgba(255, 17, 58, 0.035) 1px, transparent 1px, transparent 60px),
+    #050508;
+}
+
+/* Card Holographic Glitter / Foil Shimmer Layer */
+.foil-glitter {
+  position: relative;
+  overflow: hidden;
+}
+
+.foil-glitter::before {
+  content: '';
+  position: absolute;
+  top: -150%;
+  left: -50%;
+  width: 200%;
+  height: 300%;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 215, 0, 0.18) 35%,
+    rgba(255, 50, 80, 0.3) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(140, 240, 255, 0.3) 55%,
+    rgba(255, 215, 0, 0.18) 65%,
+    transparent 75%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  animation: cardShimmer 5s infinite ease-in-out;
+  opacity: 0.85;
+  mix-blend-mode: color-dodge;
+  z-index: 15;
+}
+
+@keyframes cardShimmer {
+  0% {
+    transform: translateY(-50%) rotate(25deg);
+  }
+  50% {
+    transform: translateY(20%) rotate(25deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(25deg);
+  }
+}
+
+/* Playing Card Parchment Surface */
+.playing-card-parchment {
+  background: 
+    radial-gradient(circle at 50% 50%, #faf6ed 0%, #eee5d2 70%, #dfd1b5 100%);
+  color: #1a1515;
+  box-shadow: 
+    0 25px 50px -10px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(255, 17, 58, 0.25),
+    inset 0 0 45px rgba(180, 150, 110, 0.35);
+  border: 1px solid rgba(200, 170, 130, 0.6);
+}
+
+.playing-card-dark {
+  background: 
+    radial-gradient(circle at 50% 30%, #1a1724 0%, #0e0c15 70%, #08070b 100%);
+  color: #f4ede0;
+  box-shadow: 
+    0 25px 60px -10px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(255, 17, 58, 0.4),
+    inset 0 0 35px rgba(255, 17, 58, 0.2);
+  border: 1px solid rgba(255, 17, 58, 0.4);
+}
+
+/* Red Laser Beam Effect */
+.laser-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(255,17,58,0) 0%, rgba(255,17,58,0.95) 20%, rgba(255,17,58,0.95) 80%, rgba(255,17,58,0) 100%);
+  box-shadow: 0 0 14px #ff113a, 0 0 30px #d6001c;
+  pointer-events: none;
+}

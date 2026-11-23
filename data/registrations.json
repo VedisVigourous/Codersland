@@ -1,0 +1,94 @@
+[
+  {
+    "id": "CL-2026-2Q5A",
+    "passcode": "BORDER-8K6F",
+    "clubName": "Techno1",
+    "teamName": "TeamTitans",
+    "members": [
+      {
+        "name": "Tillu1",
+        "email": "t@g1.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Web Development"
+      },
+      {
+        "name": "Tillu2",
+        "email": "t@g2.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cybersecurity"
+      },
+      {
+        "name": "Tillu3",
+        "email": "t@g3.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cloud"
+      },
+      {
+        "name": "Tillu4",
+        "email": "t@g4.c",
+        "phone": "",
+        "isLeader": true,
+        "domain": "Networking"
+      }
+    ],
+    "registeredAt": "2026-11-23T10:05:24.950Z",
+    "status": "VISA_GRANTED",
+    "visaDays": 14,
+    "ipAddress": "127.0.0.1",
+    "domainMap": {
+      "webDev": "Tillu1",
+      "cybersecurity": "Tillu2",
+      "cloud": "Tillu3",
+      "networking": "Tillu4"
+    }
+  },
+  {
+    "id": "CL-2026-EQPW",
+    "passcode": "BORDER-7L2B",
+    "clubName": "ACM Chapter",
+    "teamName": "Yonk",
+    "members": [
+      {
+        "name": "G",
+        "email": "b@v.co",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Web Development"
+      },
+      {
+        "name": "Test",
+        "email": "b@n.g",
+        "phone": "",
+        "isLeader": true,
+        "domain": "Cybersecurity"
+      },
+      {
+        "name": "T",
+        "email": "je@ns.do",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cloud"
+      },
+      {
+        "name": "Yehs",
+        "email": "behe@ejen.n",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Networking"
+      }
+    ],
+    "registeredAt": "2026-11-23T10:08:34.505Z",
+    "status": "VISA_GRANTED",
+    "visaDays": 14,
+    "ipAddress": "192.168.29.20",
+    "domainMap": {
+      "webDev": "G",
+      "cybersecurity": "Test",
+      "cloud": "T",
+      "networking": "Yehs"
+    }
+  }
+]

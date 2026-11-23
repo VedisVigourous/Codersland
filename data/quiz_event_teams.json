@@ -1,0 +1,86 @@
+[
+  {
+    "teamId": "CL-2026-2Q5A",
+    "passcode": "BORDER-8K6F",
+    "teamName": "TeamTitans",
+    "clubName": "Techno1",
+    "domains": {
+      "Web Development": "Tillu1",
+      "Cybersecurity": "Tillu2",
+      "Cloud": "Tillu3",
+      "Networking": "Tillu4"
+    },
+    "members": [
+      {
+        "name": "Tillu1",
+        "email": "t@g1.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Web Development"
+      },
+      {
+        "name": "Tillu2",
+        "email": "t@g2.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cybersecurity"
+      },
+      {
+        "name": "Tillu3",
+        "email": "t@g3.c",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cloud"
+      },
+      {
+        "name": "Tillu4",
+        "email": "t@g4.c",
+        "phone": "",
+        "isLeader": true,
+        "domain": "Networking"
+      }
+    ]
+  },
+  {
+    "teamId": "CL-2026-EQPW",
+    "passcode": "BORDER-7L2B",
+    "teamName": "Yonk",
+    "clubName": "ACM Chapter",
+    "domains": {
+      "Web Development": "G",
+      "Cybersecurity": "Test",
+      "Cloud": "T",
+      "Networking": "Yehs"
+    },
+    "members": [
+      {
+        "name": "G",
+        "email": "b@v.co",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Web Development"
+      },
+      {
+        "name": "Test",
+        "email": "b@n.g",
+        "phone": "",
+        "isLeader": true,
+        "domain": "Cybersecurity"
+      },
+      {
+        "name": "T",
+        "email": "je@ns.do",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Cloud"
+      },
+      {
+        "name": "Yehs",
+        "email": "behe@ejen.n",
+        "phone": "",
+        "isLeader": false,
+        "domain": "Networking"
+      }
+    ]
+  }
+]
