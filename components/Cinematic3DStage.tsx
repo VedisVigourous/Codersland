@@ -1323,7 +1323,7 @@ export default function Cinematic3DStage() {
                       <ClubEmblem size={28} />
                       <div>
                         <div className="font-techno text-[10px] text-red-800 font-bold uppercase tracking-widest">
-                          VISA GRANTED • 14 DAYS
+                          BORDERLAND VISA • CONFIRMED
                         </div>
                         <div className="font-baroque text-2xl text-stone-900">
                           CoderLands Player Pass

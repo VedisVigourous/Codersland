@@ -821,7 +821,7 @@ export default function MobileScrollStage({
                   <ClubEmblem size={24} />
                   <div>
                     <div className="font-techno text-[9px] text-red-800 font-bold uppercase tracking-widest">
-                      VISA GRANTED • 14 DAYS
+                      BORDERLAND VISA • CONFIRMED
                     </div>
                     <div className="font-baroque text-xl text-stone-900">
                       CoderLands Official Pass

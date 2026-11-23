@@ -204,10 +204,10 @@ export default function VisaPasscardView({
           className="relative w-full max-w-[330px] sm:max-w-[350px] bg-[#fbf7ee] text-stone-900 rounded-2xl p-4 sm:p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(255,17,58,0.25)] border-2 border-[#e6dbc8] overflow-hidden"
         >
           {/* Ornate Corner Accents */}
-          <CornerFiligree size={24} position="top-left" className="absolute top-2 left-2 text-red-900/60" />
-          <CornerFiligree size={24} position="top-right" className="absolute top-2 right-2 text-red-900/60" />
-          <CornerFiligree size={24} position="bottom-left" className="absolute bottom-2 left-2 text-red-900/60" />
-          <CornerFiligree size={24} position="bottom-right" className="absolute bottom-2 right-2 text-red-900/60" />
+          <CornerFiligree size={24} position="top-left" className="absolute top-2 left-2 text-red-900/60 pointer-events-none" />
+          <CornerFiligree size={24} position="top-right" className="absolute top-2 right-2 text-red-900/60 pointer-events-none" />
+          <CornerFiligree size={24} position="bottom-left" className="absolute bottom-2 left-2 text-red-900/60 pointer-events-none" />
+          <CornerFiligree size={24} position="bottom-right" className="absolute bottom-2 right-2 text-red-900/60 pointer-events-none" />
 
           {/* Subdued Playing Card Suits Watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-[0.035] pointer-events-none text-[120px] font-baroque select-none">
@@ -215,12 +215,12 @@ export default function VisaPasscardView({
           </div>
 
           {/* Card Header: Technovation & Team ID */}
-          <div className="flex items-start justify-between border-b border-amber-900/20 pb-2 mb-2.5 relative z-10">
+          <div className="flex items-start justify-between border-b border-amber-900/20 pb-2 mb-2 relative z-10">
             <div className="flex items-center gap-1.5">
               <ClubEmblem size={18} />
               <div>
                 <span className="block font-mono text-[9px] font-bold text-red-800 tracking-wider uppercase">
-                  TECHNOVATION • 14 DAYS
+                  TECHNOVATION
                 </span>
                 <span className="block font-baroque text-sm sm:text-base font-bold text-stone-900 leading-tight">
                   CoderLands Official Pass
@@ -239,17 +239,17 @@ export default function VisaPasscardView({
           </div>
 
           {/* Team Identity Centerpiece */}
-          <div className="text-center my-1.5 relative z-10">
+          <div className="text-center my-2 relative z-10">
             <h2 className="font-baroque text-2xl sm:text-3xl font-black text-stone-950 uppercase tracking-wider leading-none">
               {registeredTeam.teamName}
             </h2>
-            <div className="inline-block mt-0.5 px-2 py-0.5 rounded bg-amber-900/10 text-stone-700 font-mono text-[10px] uppercase font-bold tracking-widest">
+            <div className="inline-block mt-1 px-2.5 py-0.5 rounded bg-amber-900/10 text-stone-700 font-mono text-[10px] uppercase font-bold tracking-widest border border-amber-900/10">
               CLUB: {registeredTeam.clubName}
             </div>
           </div>
 
           {/* Secure Access Passcode Box */}
-          <div className="relative z-10 my-2 p-2 rounded-xl bg-stone-900 text-stone-100 border border-stone-800 shadow-inner flex items-center justify-between">
+          <div className="relative z-10 my-2.5 p-2 sm:p-2.5 rounded-xl bg-stone-900 text-stone-100 border border-stone-800 shadow-inner flex items-center justify-between">
             <div>
               <span className="block text-[8px] font-mono text-amber-400 uppercase tracking-widest font-bold">
                 MAIN QUIZ ACCESS PASSCODE:
@@ -268,8 +268,8 @@ export default function VisaPasscardView({
           </div>
 
           {/* 4 Assigned Domain Squad Members */}
-          <div className="grid grid-cols-2 gap-1.5 my-2 relative z-10 text-[10px]">
-            <div className="p-1.5 rounded-lg bg-amber-900/10 border border-stone-300">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 my-2.5 relative z-10 text-[10px]">
+            <div className="p-2 rounded-lg bg-amber-900/10 border border-stone-300/80">
               <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
                 WEBDEV:
               </span>
@@ -278,7 +278,7 @@ export default function VisaPasscardView({
               </span>
             </div>
 
-            <div className="p-1.5 rounded-lg bg-amber-900/10 border border-stone-300">
+            <div className="p-2 rounded-lg bg-amber-900/10 border border-stone-300/80">
               <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
                 CYBERSECURITY:
               </span>
@@ -287,7 +287,7 @@ export default function VisaPasscardView({
               </span>
             </div>
 
-            <div className="p-1.5 rounded-lg bg-amber-900/10 border border-stone-300">
+            <div className="p-2 rounded-lg bg-amber-900/10 border border-stone-300/80">
               <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
                 CLOUD:
               </span>
@@ -296,7 +296,7 @@ export default function VisaPasscardView({
               </span>
             </div>
 
-            <div className="p-1.5 rounded-lg bg-amber-900/10 border border-stone-300">
+            <div className="p-2 rounded-lg bg-amber-900/10 border border-stone-300/80">
               <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
                 NETWORKING:
               </span>
@@ -307,7 +307,7 @@ export default function VisaPasscardView({
           </div>
 
           {/* Venue & Security Watermark Footer */}
-          <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 text-[8px] font-mono text-stone-600">
+          <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 text-[8px] font-mono text-stone-600 relative z-10">
             <div className="flex flex-col text-left">
               <span className="font-bold text-stone-800 uppercase">VENUE: SEMINAR HALL 1</span>
               <span>Raman Block · 26–27 Nov</span>

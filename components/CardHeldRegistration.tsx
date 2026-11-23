@@ -873,7 +873,7 @@ export default function CardHeldRegistration() {
               VISA GRANTED
             </h2>
             <div className="font-sheepman text-2xl text-red-500 tracking-widest uppercase mt-1">
-              EXTENSION: 14 DAYS • TOURNAMENT PASS ISSUED
+              ARENA VISA • TOURNAMENT PASS ISSUED
             </div>
           </div>
 
