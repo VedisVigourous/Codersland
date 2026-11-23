@@ -1078,14 +1078,14 @@ export default function ContinuousScrollStage() {
               scale: dossierScale,
               y: dossierY,
             }}
-            className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 5 ? "pointer-events-auto" : "pointer-events-none"
+            className={`absolute inset-0 flex items-center justify-center z-40 ${
+              activeChapter === 5 ? "pointer-events-auto" : "pointer-events-none opacity-0"
             }`}
           >
-            <div className="w-full max-w-2xl mx-auto p-2">
+            <div className="w-full max-w-2xl mx-auto p-2 relative z-50">
               {!registeredTeam ? (
                 /* Fully Editable Master Dossier */
-                <div className="rounded-2xl p-5 sm:p-6 playing-card-dark foil-glitter shadow-2xl border-2 border-red-700/60 backdrop-blur-xl max-h-[85vh] overflow-y-auto">
+                <div className="rounded-2xl p-5 sm:p-6 playing-card-dark foil-glitter shadow-2xl border-2 border-red-700/60 backdrop-blur-xl max-h-[85vh] overflow-y-auto relative z-50">
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
                     <div className="flex items-center gap-3">
@@ -1107,8 +1107,8 @@ export default function ContinuousScrollStage() {
                   </p>
 
                   {/* Editable Identity Section */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-left">
-                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-left relative z-40">
+                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800 relative z-30">
                       <label className="text-[10px] font-mono text-red-400 uppercase font-bold block mb-1">
                         Club Affiliation:
                       </label>
@@ -1117,10 +1117,10 @@ export default function ContinuousScrollStage() {
                         value={clubName}
                         onChange={(e) => setClubName(e.target.value)}
                         placeholder="Enter Club Name"
-                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none"
+                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none select-text cursor-text relative z-40"
                       />
                     </div>
-                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800">
+                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800 relative z-30">
                       <label className="text-[10px] font-mono text-red-400 uppercase font-bold block mb-1">
                         Squad Moniker:
                       </label>
@@ -1129,7 +1129,7 @@ export default function ContinuousScrollStage() {
                         value={teamName}
                         onChange={(e) => setTeamName(e.target.value)}
                         placeholder="Enter Squad Moniker"
-                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none"
+                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none select-text cursor-text relative z-40"
                       />
                     </div>
                   </div>
