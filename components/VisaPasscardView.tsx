@@ -204,10 +204,10 @@ export default function VisaPasscardView({
           className="relative w-full max-w-[330px] sm:max-w-[350px] bg-[#fbf7ee] text-stone-900 rounded-2xl p-4 sm:p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(255,17,58,0.25)] border-2 border-[#e6dbc8] overflow-hidden"
         >
           {/* Ornate Corner Accents */}
-          <CornerFiligree size={24} className="absolute top-2 left-2 text-red-900/60" />
-          <CornerFiligree size={24} className="absolute top-2 right-2 -scale-x-100 text-red-900/60" />
-          <CornerFiligree size={24} className="absolute bottom-2 left-2 -scale-y-100 text-red-900/60" />
-          <CornerFiligree size={24} className="absolute bottom-2 right-2 rotate-180 text-red-900/60" />
+          <CornerFiligree size={24} position="top-left" className="absolute top-2 left-2 text-red-900/60" />
+          <CornerFiligree size={24} position="top-right" className="absolute top-2 right-2 text-red-900/60" />
+          <CornerFiligree size={24} position="bottom-left" className="absolute bottom-2 left-2 text-red-900/60" />
+          <CornerFiligree size={24} position="bottom-right" className="absolute bottom-2 right-2 text-red-900/60" />
 
           {/* Subdued Playing Card Suits Watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-[0.035] pointer-events-none text-[120px] font-baroque select-none">

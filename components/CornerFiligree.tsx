@@ -3,16 +3,32 @@ import React from "react";
 interface CornerFiligreeProps {
   className?: string;
   size?: number;
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   flip?: boolean;
 }
 
-export default function CornerFiligree({ className = "", size = 32, flip = false }: CornerFiligreeProps) {
+export default function CornerFiligree({
+  className = "",
+  size = 32,
+  position,
+  flip = false,
+}: CornerFiligreeProps) {
+  let transformClass = "";
+
+  if (position === "top-right") {
+    transformClass = "-scale-x-100";
+  } else if (position === "bottom-left") {
+    transformClass = "-scale-y-100";
+  } else if (position === "bottom-right" || flip) {
+    transformClass = "rotate-180";
+  }
+
   return (
     <svg
       viewBox="0 0 50 50"
       width={size}
       height={size}
-      className={`fill-none stroke-current text-red-900/60 ${flip ? "rotate-180" : ""} ${className}`}
+      className={`fill-none stroke-current text-red-900/60 ${transformClass} ${className}`}
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"

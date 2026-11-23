@@ -125,7 +125,7 @@ export default function RoyalDirectCard({
 
           {/* Top-Right Corner Filigree */}
           <div className="flex flex-col items-end">
-            <CornerFiligree size={38} />
+            <CornerFiligree size={38} position="top-right" />
           </div>
         </div>
 
@@ -158,7 +158,7 @@ export default function RoyalDirectCard({
         {/* Bottom Row: Bottom-Left Filigree & Bottom-Right Inverted Corner */}
         <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
           <div className="flex flex-col items-start">
-            <CornerFiligree size={32} flip={true} />
+            <CornerFiligree size={32} position="bottom-left" />
             {footerText && (
               <span className="font-mono text-[10px] text-stone-600 mt-1 uppercase font-semibold">
                 {footerText}

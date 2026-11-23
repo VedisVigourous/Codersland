@@ -132,7 +132,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-red-700 mt-1">K</span>
               <span className="text-sm font-bold text-red-700">♥</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -164,7 +164,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 CARD I // CLUB
               </span>
@@ -208,7 +208,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-stone-900 mt-1">A</span>
               <span className="text-sm font-bold text-stone-900">♠</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -240,7 +240,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 CARD II // TEAM
               </span>
@@ -284,7 +284,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-stone-900 mt-1">I</span>
               <span className="text-sm font-bold text-stone-900">♠</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -345,7 +345,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 15 QUESTIONS // REALM 1
               </span>
@@ -389,7 +389,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-stone-900 mt-1">II</span>
               <span className="text-sm font-bold text-stone-900">♣</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -450,7 +450,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 15 QUESTIONS // REALM 2
               </span>
@@ -494,7 +494,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-red-700 mt-1">III</span>
               <span className="text-sm font-bold text-red-700">♦</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -555,7 +555,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 15 QUESTIONS // REALM 3
               </span>
@@ -599,7 +599,7 @@ export default function MobileScrollStage({
               <span className="font-sheepman text-xl font-black text-red-700 mt-1">IV</span>
               <span className="text-sm font-bold text-red-700">♥</span>
             </div>
-            <CornerFiligree size={34} />
+            <CornerFiligree size={34} position="top-right" />
           </div>
 
           {/* Center Content */}
@@ -660,7 +660,7 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} flip={true} />
+              <CornerFiligree size={28} position="bottom-left" />
               <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
                 15 QUESTIONS // REALM 4
               </span>
