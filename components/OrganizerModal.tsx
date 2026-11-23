@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Shield, Users, Download, Zap, X, Check, RefreshCw, Key, Lock, Unlock, LogOut, Trash2 } from "lucide-react";
+import { Shield, Users, Download, Zap, X, Check, RefreshCw, Key, Lock, Unlock, LogOut } from "lucide-react";
 import ClubEmblem from "./ClubEmblem";
 import { sounds } from "@/lib/sounds";
 
@@ -201,44 +201,6 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
     document.body.removeChild(link);
   };
 
-  const [isPurging, setIsPurging] = useState(false);
-
-  const handlePurgeDatabase = async () => {
-    const confirmation = window.prompt(
-      "⚠️ DANGER: You are about to permanently purge ALL test registrations back to 0.\n\nType 'RESET' to confirm:"
-    );
-    if (confirmation !== "RESET") {
-      return;
-    }
-
-    try {
-      setIsPurging(true);
-      sounds.playCardClick();
-      const res = await fetch("/api/admin/reset", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          organizerId: organizerIdInput || "technoAdmin",
-          passkey: passkeyInput || "coderland2k26",
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        alert("Reset failed: " + (data.error || "Unknown error"));
-        return;
-      }
-
-      alert("✅ Success: Arena database has been purged. Total squads reset to 0.");
-      setTeams([]);
-      fetchTeams();
-    } catch (err) {
-      alert("Error resetting database: " + String(err));
-    } finally {
-      setIsPurging(false);
-    }
-  };
-
   const filtered = teams.filter(
     (t) =>
       t.teamName.toLowerCase().includes(filterQuery.toLowerCase()) ||
@@ -388,17 +350,7 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
                 className="px-3.5 py-1.5 rounded-lg bg-zinc-900 border border-zinc-700 text-xs text-zinc-200 font-mono hover:text-white hover:border-emerald-500 flex items-center gap-1.5 disabled:opacity-40 cursor-pointer shadow-sm"
               >
                 <Download className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="font-bold">EXPORT CSV</span>
-              </button>
-
-              <button
-                onClick={handlePurgeDatabase}
-                disabled={isPurging}
-                className="px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-700/80 text-xs text-red-300 font-mono hover:bg-red-900 hover:text-white flex items-center gap-1.5 cursor-pointer transition-all shadow-sm"
-                title="Permanently wipe all test registrations and reset counter to 0"
-              >
-                <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                <span>{isPurging ? "RESETTING..." : "RESET DB (TO 0)"}</span>
+                <span className="font-bold">EXPORT CSV (ALL DETAILS)</span>
               </button>
             </div>
           </div>
