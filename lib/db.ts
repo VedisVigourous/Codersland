@@ -212,6 +212,53 @@ async function appendAuditLog(event: string, payload: any): Promise<void> {
   }
 }
 
+// In-memory rate limiting map for local dev fallback
+const localRateLimits = new Map<string, { count: number; expiresAt: number }>();
+
+export async function checkRateLimit(ip: string): Promise<{
+  allowed: boolean;
+  remaining: number;
+  retryAfter?: number;
+}> {
+  const safeIp = ip.trim() || "anonymous";
+  const limit = 3; // Max 3 registrations
+  const windowSec = 180; // per 3-minute window
+
+  if (redis) {
+    try {
+      const key = `coderlands:ratelimit:${safeIp}`;
+      const count = await redis.incr(key);
+      if (count === 1) {
+        await redis.expire(key, windowSec);
+      }
+      if (count > limit) {
+        const ttl = await redis.ttl(key);
+        return { allowed: false, remaining: 0, retryAfter: ttl > 0 ? ttl : windowSec };
+      }
+      return { allowed: true, remaining: limit - count };
+    } catch (err) {
+      console.error("Redis rate limit check error:", err);
+      // Fall through to in-memory check
+    }
+  }
+
+  // Local in-memory rate limiter fallback
+  const now = Date.now();
+  const entry = localRateLimits.get(safeIp);
+  if (!entry || now > entry.expiresAt) {
+    localRateLimits.set(safeIp, { count: 1, expiresAt: now + windowSec * 1000 });
+    return { allowed: true, remaining: limit - 1 };
+  }
+
+  if (entry.count >= limit) {
+    const retryAfter = Math.ceil((entry.expiresAt - now) / 1000);
+    return { allowed: false, remaining: 0, retryAfter };
+  }
+
+  entry.count++;
+  return { allowed: true, remaining: limit - entry.count };
+}
+
 // Generate unique Team ID and Passcode
 function generateTeamId(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -305,7 +352,7 @@ export async function registerTeam(input: RegisterInput): Promise<{
       }
     }
 
-    // 5. Check duplicate team names
+    // 5. Check duplicate team names & student emails
     const existing = await readRegistrationsUnified();
     const duplicate = existing.find(
       (t) => t.teamName.toLowerCase().trim() === team.toLowerCase()
@@ -315,6 +362,21 @@ export async function registerTeam(input: RegisterInput): Promise<{
         success: false,
         error: `Team name "${team}" is already registered. Please choose a different name.`,
       };
+    }
+
+    // Check if any member's email has already been used in an existing squad
+    for (const member of input.members) {
+      const email = member.email?.trim().toLowerCase();
+      if (!email) continue;
+      const emailRegistered = existing.find((t) =>
+        t.members.some((m) => m.email?.trim().toLowerCase() === email)
+      );
+      if (emailRegistered) {
+        return {
+          success: false,
+          error: `College email "${member.email}" is already registered under squad "${emailRegistered.teamName}". Each student may only register in one squad.`,
+        };
+      }
     }
 
     // 6. Build Registration Record
@@ -363,5 +425,44 @@ export async function registerTeam(input: RegisterInput): Promise<{
       success: true,
       team: newRegistration,
     };
+  });
+}
+
+// Organizer Database Purge (Protected)
+export async function purgeDatabase(passkey: string): Promise<{ success: boolean; error?: string }> {
+  if (passkey !== "coderland2k26") {
+    return { success: false, error: "Unauthorized: Invalid organizer passkey." };
+  }
+
+  return dbMutex.dispatch(async () => {
+    // 1. Wipe from Cloud Redis
+    if (redis) {
+      try {
+        await redis.del("coderlands:registrations");
+        await redis.del("coderlands:audit_log");
+        // Also clear any rate limit keys
+        const keys = await redis.keys("coderlands:ratelimit:*");
+        if (keys && keys.length > 0) {
+          await redis.del(...keys);
+        }
+      } catch (err) {
+        console.error("Redis purge error:", err);
+      }
+    }
+
+    // 2. Wipe from local disk
+    writeRegistrationsToDisk([]);
+    try {
+      if (fs.existsSync(AUDIT_LOG_FILE)) {
+        fs.writeFileSync(AUDIT_LOG_FILE, "", "utf8");
+      }
+    } catch {
+      // Ignored
+    }
+
+    // 3. Clear local rate limit map
+    localRateLimits.clear();
+
+    return { success: true };
   });
 }
