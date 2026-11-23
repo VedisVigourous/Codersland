@@ -697,12 +697,13 @@ export default function MobileScrollStage({
               className="arena-dossier rounded-2xl p-5 sm:p-6 bg-[#0d090d]/95 backdrop-blur-xl border-2 border-red-900/60 shadow-[0_0_50px_rgba(255,17,58,0.25),0_25px_60px_rgba(0,0,0,0.95)] relative overflow-hidden"
             >
               {/* Single Line Header: N Emblem (Left) | Coderland Visa Application (Center) | Date & Reg ID (Right) */}
+              {/* Single Line Header: [N] Coderland Visa Application (Left) | Date (Right) */}
               <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3 relative z-10">
                 <div className="flex items-center gap-2">
                   <ClubEmblem size={22} />
-                </div>
-                <div className="font-baroque text-lg sm:text-xl text-zinc-100 font-bold tracking-wide text-center">
-                  Coderland Visa Application
+                  <span className="font-baroque text-base sm:text-lg text-zinc-100 font-bold tracking-wide">
+                    Coderland Visa Application
+                  </span>
                 </div>
                 <div className="text-right font-mono text-[11px] text-red-400 font-bold tracking-wider">
                   26–27 NOV
@@ -754,7 +755,7 @@ export default function MobileScrollStage({
                     className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-800/60 transition-all"
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-mono font-bold text-amber-300 tracking-wide">
+                      <span className="text-xs font-mono font-bold text-red-400 tracking-wide">
                         {m.domain}:
                       </span>
                       <button
@@ -791,7 +792,7 @@ export default function MobileScrollStage({
               <button
                 disabled={isSubmitting}
                 onClick={handleSubmit}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-xs uppercase shadow-laser active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-xs uppercase shadow-[0_4px_14px_rgba(255,17,58,0.25)] hover:shadow-[0_6px_20px_rgba(255,17,58,0.35)] active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
               >
                 {isSubmitting ? "Locking Registration..." : "Lock Registration"}
               </button>

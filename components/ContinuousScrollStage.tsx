@@ -1050,13 +1050,13 @@ export default function ContinuousScrollStage() {
                   <CornerFiligree size={18} position="bottom-left" className="absolute bottom-2.5 left-2.5 text-red-900/35 pointer-events-none" />
                   <CornerFiligree size={18} position="bottom-right" className="absolute bottom-2.5 right-2.5 text-red-900/35 pointer-events-none" />
 
-                  {/* Single Line Header: N Emblem (Left) | Coderland Visa Application (Center) | Date & Reg ID (Right) */}
+                  {/* Single Line Header: [N] Coderland Visa Application (Left) | Date & Reg ID (Right) */}
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3 relative z-10">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <ClubEmblem size={24} />
-                    </div>
-                    <div className="font-baroque text-lg sm:text-2xl text-zinc-100 font-bold tracking-wide text-center">
-                      Coderland Visa Application
+                      <span className="font-baroque text-lg sm:text-2xl text-zinc-100 font-bold tracking-wide">
+                        Coderland Visa Application
+                      </span>
                     </div>
                     <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
                       26–27 NOV · CL-2026
@@ -1107,7 +1107,7 @@ export default function ContinuousScrollStage() {
                           className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-800/60 transition-all flex flex-col justify-between"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-mono font-bold text-amber-300 tracking-wide">
+                            <span className="text-xs font-mono font-bold text-red-400 tracking-wide">
                               {m.domain}:
                             </span>
                             <button
@@ -1146,7 +1146,7 @@ export default function ContinuousScrollStage() {
                     <button
                       disabled={isSubmitting}
                       onClick={handleSubmit}
-                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-laser active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-[0_4px_14px_rgba(255,17,58,0.25)] hover:shadow-[0_6px_20px_rgba(255,17,58,0.35)] active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
                     >
                       {isSubmitting ? "Locking Registration..." : "Lock Registration"}
                     </button>

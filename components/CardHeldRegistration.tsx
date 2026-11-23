@@ -742,13 +742,13 @@ export default function CardHeldRegistration() {
 
           {/* Master Visa Application Dossier Card */}
           <div className="w-full max-w-2xl rounded-2xl p-6 sm:p-8 playing-card-dark foil-glitter shadow-2xl relative overflow-hidden">
-            {/* Single Line Header */}
+            {/* Single Line Header: [N] Coderlands Visa Application (Left) | Date & Reg ID (Right) */}
             <div className="flex items-center justify-between border-b border-red-900/40 pb-4 mb-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <ClubEmblem size={28} />
-              </div>
-              <div className="font-baroque text-2xl text-zinc-100 font-bold tracking-wide text-center">
-                Coderlands Visa Application
+                <span className="font-baroque text-2xl text-zinc-100 font-bold tracking-wide">
+                  Coderlands Visa Application
+                </span>
               </div>
               <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
                 26–27 NOV · CL-2026
@@ -834,7 +834,7 @@ export default function CardHeldRegistration() {
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSubmitRegistration}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-base uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-base uppercase shadow-[0_4px_14px_rgba(255,17,58,0.25)] hover:shadow-[0_6px_20px_rgba(255,17,58,0.35)] hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
               >
                 {isSubmitting ? "Locking Registration..." : "Lock Registration"}
               </button>

@@ -1225,11 +1225,11 @@ export default function Cinematic3DStage() {
                 /* Stage A: Pre-Submit Dossier Contract */
                 <div className="w-full rounded-2xl p-5 sm:p-6 playing-card-dark foil-glitter shadow-2xl relative my-auto">
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <ClubEmblem size={24} />
-                    </div>
-                    <div className="font-baroque text-lg sm:text-xl text-zinc-100 font-bold tracking-wide text-center">
-                      Coderland Visa Application
+                      <span className="font-baroque text-lg sm:text-xl text-zinc-100 font-bold tracking-wide">
+                        Coderland Visa Application
+                      </span>
                     </div>
                     <span className="font-mono text-xs text-red-400 font-bold">26–27 NOV · CL-2026</span>
                   </div>
@@ -1294,7 +1294,7 @@ export default function Cinematic3DStage() {
                     <button
                       disabled={isSubmitting}
                       onClick={handleSubmitRegistration}
-                      className="px-7 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
+                      className="px-7 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-[0_4px_14px_rgba(255,17,58,0.25)] hover:shadow-[0_6px_20px_rgba(255,17,58,0.35)] hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
                     >
                       {isSubmitting ? "Locking Registration..." : "Lock Registration"}
                     </button>
