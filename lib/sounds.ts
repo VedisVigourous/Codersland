@@ -1,7 +1,17 @@
 // Browser Web Audio API sound generator for Borderland immersive feedback
 class BorderlandAudio {
   private ctx: AudioContext | null = null;
-  public enabled: boolean = true;
+  private output: GainNode | null = null;
+  private enabled = false;
+
+  setEnabled(enabled: boolean) {
+    this.enabled = enabled;
+    if (this.output) this.output.gain.value = enabled ? 1 : 0;
+  }
+
+  unlock() {
+    this.getContext();
+  }
 
   private getContext(): AudioContext | null {
     if (typeof window === "undefined") return null;
@@ -9,10 +19,13 @@ class BorderlandAudio {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtx) {
         this.ctx = new AudioCtx();
+        this.output = this.ctx.createGain();
+        this.output.gain.value = this.enabled ? 1 : 0;
+        this.output.connect(this.ctx.destination);
       }
     }
     if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
+      void this.ctx.resume().catch(() => {});
     }
     return this.ctx;
   }
@@ -21,7 +34,8 @@ class BorderlandAudio {
   playCardSwoosh() {
     if (!this.enabled) return;
     const ctx = this.getContext();
-    if (!ctx) return;
+    const output = this.output;
+    if (!ctx || !output) return;
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -40,7 +54,7 @@ class BorderlandAudio {
 
     osc.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(output);
 
     osc.start();
     osc.stop(ctx.currentTime + 0.2);
@@ -50,7 +64,8 @@ class BorderlandAudio {
   playCardClick() {
     if (!this.enabled) return;
     const ctx = this.getContext();
-    if (!ctx) return;
+    const output = this.output;
+    if (!ctx || !output) return;
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -63,7 +78,7 @@ class BorderlandAudio {
     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(output);
 
     osc.start();
     osc.stop(ctx.currentTime + 0.09);
@@ -73,7 +88,8 @@ class BorderlandAudio {
   playLaserZap() {
     if (!this.enabled) return;
     const ctx = this.getContext();
-    if (!ctx) return;
+    const output = this.output;
+    if (!ctx || !output) return;
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -86,7 +102,7 @@ class BorderlandAudio {
     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(output);
 
     osc.start();
     osc.stop(ctx.currentTime + 0.26);
@@ -96,7 +112,8 @@ class BorderlandAudio {
   playVisaGranted() {
     if (!this.enabled) return;
     const ctx = this.getContext();
-    if (!ctx) return;
+    const output = this.output;
+    if (!ctx || !output) return;
 
     // Heavy stamp thud + sinister atmospheric chime
     const now = ctx.currentTime;
@@ -110,7 +127,7 @@ class BorderlandAudio {
     subGain.gain.setValueAtTime(0.4, now);
     subGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
     subOsc.connect(subGain);
-    subGain.connect(ctx.destination);
+    subGain.connect(output);
     subOsc.start(now);
     subOsc.stop(now + 0.45);
 
@@ -123,7 +140,7 @@ class BorderlandAudio {
       chimeGain.gain.setValueAtTime(0.12, now + 0.1 + i * 0.08);
       chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8 + i * 0.08);
       chimeOsc.connect(chimeGain);
-      chimeGain.connect(ctx.destination);
+      chimeGain.connect(output);
       chimeOsc.start(now + 0.1 + i * 0.08);
       chimeOsc.stop(now + 0.9 + i * 0.08);
     });

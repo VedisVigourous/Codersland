@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
+import { SoundToggle } from "./ArenaHeader";
 import ClubEmblem from "./ClubEmblem";
 import CornerFiligree from "./CornerFiligree";
 import { sounds } from "@/lib/sounds";
@@ -14,8 +15,6 @@ import {
   RotateCcw,
   Sparkles,
   X,
-  Volume2,
-  VolumeX,
   Lock,
 } from "lucide-react";
 
@@ -156,7 +155,7 @@ export default function VisaPasscardView({
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050508] text-zinc-100 flex flex-col justify-between items-center py-2 px-3 sm:px-4 select-none overflow-x-hidden">
+    <div className="arena-visa relative min-h-screen w-full text-zinc-100 flex flex-col justify-between items-center py-2 px-3 sm:px-4 select-none overflow-x-hidden">
       {/* =================================================================== */}
       {/* COMPACT CENTERED CODERLANDS HEADER (NO NAVBAR)                     */}
       {/* =================================================================== */}
@@ -171,6 +170,12 @@ export default function VisaPasscardView({
           CoderLands
         </h1>
       </header>
+
+      {toggleSound && (
+        <div className="arena-visa-sound">
+          <SoundToggle enabled={Boolean(audioEnabled)} onToggle={toggleSound} />
+        </div>
+      )}
 
       {/* Main Isolated Card Arena */}
       <main className="flex-1 flex flex-col items-center justify-center my-2 sm:my-3 px-2 relative z-30 max-w-md w-full">
@@ -305,7 +310,7 @@ export default function VisaPasscardView({
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 text-[8px] font-mono text-stone-600">
             <div className="flex flex-col text-left">
               <span className="font-bold text-stone-800 uppercase">VENUE: SEMINAR HALL 1</span>
-              <span>Raman Block • 26th & 27th</span>
+              <span>Raman Block · 26–27 Nov</span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-bold text-red-700 uppercase">BORDERLAND VISA</span>

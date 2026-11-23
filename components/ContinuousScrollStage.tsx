@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, MotionConfig } from "framer-motion";
+import ArenaHeader from "./ArenaHeader";
+import ArenaIntro from "./ArenaIntro";
 import ClubEmblem from "./ClubEmblem";
 import RoyalDirectCard from "./RoyalDirectCard";
 import OrganizerModal from "./OrganizerModal";
@@ -15,12 +17,9 @@ import {
   AlertCircle,
   Copy,
   Download,
-  Volume2,
-  VolumeX,
   Crown,
   Flame,
   Shield,
-  ArrowDown,
 } from "lucide-react";
 
 export type DomainType = "Web Development" | "Cybersecurity" | "Cloud" | "Networking";
@@ -45,12 +44,12 @@ const POPULAR_CLUBS = [
 ];
 
 const CHAPTERS = [
-  { id: 0, label: "INTRO", scrollTarget: 0 },
-  { id: 1, label: "I. BRIEFING", scrollTarget: 0.16 },
-  { id: 2, label: "II. IDENTITY", scrollTarget: 0.36 },
-  { id: 3, label: "III. ALPHA SQUAD", scrollTarget: 0.58 },
-  { id: 4, label: "IV. BRAVO SQUAD", scrollTarget: 0.78 },
-  { id: 5, label: "V. VISA DOSSIER", scrollTarget: 0.96 },
+  { id: 0, label: "Intro", scrollTarget: 0 },
+  { id: 1, label: "Briefing", scrollTarget: 0.16 },
+  { id: 2, label: "Team", scrollTarget: 0.36 },
+  { id: 3, label: "Squad Alpha", scrollTarget: 0.58 },
+  { id: 4, label: "Squad Bravo", scrollTarget: 0.78 },
+  { id: 5, label: "Review", scrollTarget: 0.96 },
 ];
 
 export default function ContinuousScrollStage() {
@@ -58,7 +57,7 @@ export default function ContinuousScrollStage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Sound state
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(false);
   const [isOrganizerOpen, setIsOrganizerOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState(0);
 
@@ -99,33 +98,43 @@ export default function ContinuousScrollStage() {
     else setActiveChapter(5);
   });
 
-  // Background Theme Song Initialization
   useEffect(() => {
-    const audio = new Audio("/themesong.mp3");
+    containerRef.current?.querySelectorAll<HTMLElement>("[data-arena-chapter]").forEach((stage) => {
+      stage.inert = Number(stage.dataset.arenaChapter) !== activeChapter;
+    });
+  }, [activeChapter, registeredTeam]);
+
+  useEffect(() => {
+    const audio = document.createElement("audio");
+    audio.preload = "none";
+    audio.src = "/themesong.mp3";
     audio.loop = true;
-    audio.volume = 0.25; // 25% volume as requested (mild, immersive)
+    audio.volume = 0.25;
     audioRef.current = audio;
 
-    const startAudio = () => {
-      if (audioRef.current && audioEnabled) {
-        audioRef.current.play().catch(() => {
-          // Handled if browser blocks autoplay until interaction
-        });
-      }
-      window.removeEventListener("click", startAudio);
-      window.removeEventListener("touchstart", startAudio);
-      window.removeEventListener("scroll", startAudio);
+    const onPlaying = () => {
+      if (audio.paused) return;
+      sounds.setEnabled(true);
+      setAudioEnabled(true);
+    };
+    const onStopped = () => {
+      sounds.setEnabled(false);
+      setAudioEnabled(false);
     };
 
-    window.addEventListener("click", startAudio);
-    window.addEventListener("touchstart", startAudio);
-    window.addEventListener("scroll", startAudio);
+    audio.addEventListener("playing", onPlaying);
+    audio.addEventListener("pause", onStopped);
+    audio.addEventListener("error", onStopped);
+    audio.addEventListener("ended", onStopped);
 
     return () => {
+      audio.removeEventListener("playing", onPlaying);
+      audio.removeEventListener("pause", onStopped);
+      audio.removeEventListener("error", onStopped);
+      audio.removeEventListener("ended", onStopped);
       audio.pause();
-      window.removeEventListener("click", startAudio);
-      window.removeEventListener("touchstart", startAudio);
-      window.removeEventListener("scroll", startAudio);
+      sounds.setEnabled(false);
+      audioRef.current = null;
     };
   }, []);
 
@@ -154,16 +163,23 @@ export default function ContinuousScrollStage() {
   }, []);
 
   const toggleSound = () => {
-    const next = !audioEnabled;
-    setAudioEnabled(next);
-    sounds.enabled = next;
-    if (audioRef.current) {
-      if (next) {
-        audioRef.current.play().catch(() => {});
-      } else {
-        audioRef.current.pause();
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (!audio.paused) {
+      audio.pause();
+      sounds.setEnabled(false);
+      setAudioEnabled(false);
+      return;
     }
+
+    // Call play in the click handler so browsers recognize the user gesture.
+    audio.play().catch(() => {
+      if (audioRef.current !== audio || !audio.paused) return;
+      sounds.setEnabled(false);
+      setAudioEnabled(false);
+    });
+    sounds.unlock();
   };
 
   const updateMember = (index: number, field: keyof MemberData, value: any) => {
@@ -192,7 +208,7 @@ export default function ContinuousScrollStage() {
     const totalHeight = containerRef.current.scrollHeight - window.innerHeight;
     window.scrollTo({
       top: totalHeight * targetProgress,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
     });
   };
 
@@ -202,10 +218,8 @@ export default function ContinuousScrollStage() {
 
   // Chapter 0: Dramatic 3D Intro ("Technovation Presents CoderLands")
   // Explodes forward through camera on scroll [0.05 -> 0.16]
-  const introScale = useTransform(scrollYProgress, [0.03, 0.15], [1, 2.2]);
-  const introZ = useTransform(scrollYProgress, [0.03, 0.15], [0, 500]);
+  const introScale = useTransform(scrollYProgress, [0.03, 0.15], [1, 1.035]);
   const introOpacity = useTransform(scrollYProgress, [0.06, 0.14], [1, 0]);
-  const introBlur = useTransform(scrollYProgress, [0.06, 0.14], ["blur(0px)", "blur(18px)"]);
 
   // Chapter 1: 3 Royal Briefing Cards (Enter from depth [0.08 -> 0.16], Exit to edges [0.24 -> 0.35])
   const briefingEnterScale = useTransform(scrollYProgress, [0.08, 0.16], [0.75, 1]);
@@ -336,7 +350,7 @@ export default function ContinuousScrollStage() {
   // If registration is complete, render ONLY the isolated Visa Passcard screen!
   if (registeredTeam) {
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-[#050508]">
+      <div className="fixed inset-0 z-50 overflow-y-auto arena-visa-screen">
         <VisaPasscardView
           registeredTeam={registeredTeam}
           onReset={() => {
@@ -362,14 +376,14 @@ export default function ContinuousScrollStage() {
   }
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       {/* Protected Organizer Desk Modal (shared across mobile and desktop) */}
       <OrganizerModal isOpen={isOrganizerOpen} onClose={() => setIsOrganizerOpen(false)} />
 
       {/* ===================================================================== */}
       {/* MOBILE RESPONSIVE VIEW (Minimalist Single-Card Scroll Sequence)       */}
       {/* ===================================================================== */}
-      <div className="block md:hidden">
+      <div className="arena-compact-view">
         <MobileScrollStage
           clubName={clubName}
           setClubName={setClubName}
@@ -392,74 +406,28 @@ export default function ContinuousScrollStage() {
       {/* ===================================================================== */}
       {/* DESKTOP VIEW (600vh Continuous 3D Arena with Fanned Cards & Motion)   */}
       {/* ===================================================================== */}
-      <div ref={containerRef} className="hidden md:block relative w-full h-[600vh]">
+      <div ref={containerRef} className="arena-desktop-view relative w-full h-[600vh]">
         {/* ===================================================================== */}
         {/* FIXED VIEWPORT: CANVAS & HEADER                                      */}
         {/* ===================================================================== */}
-        <div className="fixed inset-0 w-screen h-screen overflow-hidden flex flex-col justify-between p-4 sm:p-6 z-10 select-none">
+        <div className="arena-viewport fixed inset-0 flex flex-col overflow-hidden z-10 select-none">
         {/* =================================================================== */}
         {/* UNIFIED SLEEK TOP NAVIGATION BAR                                    */}
         {/* =================================================================== */}
-        <header className="relative z-40 w-full max-w-6xl mx-auto flex items-center justify-between px-4 py-2.5 rounded-full bg-black/60 border border-red-950/80 backdrop-blur-md shadow-2xl">
-          <div className="flex items-center gap-3">
-            <ClubEmblem size={22} />
-            <div className="flex flex-col">
-              <span className="font-techno text-[10px] tracking-[0.2em] text-[#ff113a] font-bold leading-none">
-                TECHNOVATION
-              </span>
-              <span className="font-baroque text-lg text-zinc-100 tracking-wide leading-tight">
-                CoderLands
-              </span>
-            </div>
-          </div>
-
-          {/* Interactive Chapter Pills */}
-          <nav className="hidden lg:flex items-center gap-1 bg-black/50 p-1 rounded-full border border-zinc-800/80 text-xs font-mono">
-            {CHAPTERS.map((ch) => (
+        <ArenaHeader audioEnabled={audioEnabled} toggleSound={toggleSound} onOpenOrganizer={() => setIsOrganizerOpen(true)}>
+          <nav className="arena-chapter-nav" aria-label="Registration chapters">
+            {CHAPTERS.map((chapter) => (
               <button
-                key={ch.id}
-                onClick={() => scrollToChapter(ch.scrollTarget)}
-                className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider transition-all cursor-pointer ${
-                  activeChapter === ch.id
-                    ? "bg-red-700 text-white shadow-[0_0_12px_#ff113a]"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
-                }`}
+                key={chapter.id}
+                type="button"
+                onClick={() => scrollToChapter(chapter.scrollTarget)}
+                aria-current={activeChapter === chapter.id ? "step" : undefined}
               >
-                {ch.label}
+                {chapter.label}
               </button>
             ))}
           </nav>
-
-          {/* Right: Sound Toggle & Protected Organizer Desk */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleSound}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/70 border border-zinc-800 hover:border-red-600 text-zinc-300 text-xs font-mono transition-all cursor-pointer shadow-sm"
-              title="Toggle Background Theme Music & SFX"
-            >
-              {audioEnabled ? (
-                <>
-                  <Volume2 className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-                  <span className="text-[10px] font-bold text-red-300">AUDIO ON</span>
-                </>
-              ) : (
-                <>
-                  <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
-                  <span className="text-[10px] text-zinc-500">MUTED</span>
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={() => setIsOrganizerOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/60 hover:border-red-500 text-red-300 text-xs font-mono transition-all cursor-pointer shadow-sm"
-              title="Open Organizer Console (Passkey Protected)"
-            >
-              <ClubEmblem size={14} />
-              <span className="text-[10px] font-bold tracking-wider">ORGANIZER</span>
-            </button>
-          </div>
-        </header>
+        </ArenaHeader>
 
         {/* Global Error Toast */}
         {errorMessage && (
@@ -472,57 +440,20 @@ export default function ContinuousScrollStage() {
         {/* =================================================================== */}
         {/* 3D CANVAS FOR ALL CARDS                                             */}
         {/* =================================================================== */}
-        <div className="relative flex-1 w-full max-w-6xl mx-auto flex items-center justify-center preserve-3d">
+        <div className="relative min-h-0 flex-1 w-full mx-auto flex items-center justify-center preserve-3d">
           {/* ================================================================= */}
           {/* STAGE 0: DRAMATIC 3D "TECHNOVATION PRESENTS CODERLANDS" OPENING   */}
           {/* Explodes forward through camera on scroll                         */}
           {/* ================================================================= */}
           <motion.div
-            style={{
-              scale: introScale,
-              z: introZ,
-              opacity: introOpacity,
-              filter: introBlur,
-            }}
-            className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-30"
+            style={{ scale: introScale, opacity: introOpacity }}
+            className="arena-desktop-intro absolute inset-0 z-30"
+            data-arena-chapter="0"
           >
-            {/* Technovation Club Logo Crest */}
-            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-red-950/50 border border-red-700/60 text-red-400 mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(255,17,58,0.4)] animate-pulse">
-              <ClubEmblem size={24} />
-              <span className="font-techno tracking-[0.3em] text-xs uppercase text-red-500 font-bold">
-                TECHNOVATION PRESENTS
-              </span>
-            </div>
-
-            {/* Huge 3D Chrome Baroque CoderLands Title */}
-            <div className="relative mb-3">
-              <h1 className="font-baroque text-6xl sm:text-8xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 tracking-wide drop-shadow-[0_15px_35px_rgba(255,17,58,0.55)]">
-                CoderLands
-              </h1>
-              <div className="absolute inset-0 -z-10 blur-3xl opacity-50 bg-gradient-to-r from-red-600 via-rose-500 to-red-800" />
-            </div>
-
-            {/* Inter-Club Arena Tag */}
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-600" />
-              <span className="font-sheepman text-xl sm:text-2xl tracking-[0.35em] uppercase text-red-500 font-extrabold drop-shadow-[0_0_12px_rgba(255,17,58,0.8)]">
-                INTER-CLUB ARENA • 26TH & 27TH
-              </span>
-              <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-600" />
-            </div>
-
-            {/* Alice in Borderland Tagline */}
-            <p className="max-w-xl text-zinc-300 text-xs sm:text-sm font-body px-4 leading-relaxed mb-8">
-              Four Specialized Realms. Four Domain Players. One Team Visa. Choose your domain specialists wisely before the arena locks.
-            </p>
-
-            {/* Scroll Indicator Prompt */}
-            <div className="flex flex-col items-center gap-2 text-zinc-400 font-mono text-xs animate-bounce">
-              <span className="tracking-widest uppercase text-red-400 text-[11px] font-bold">
-                SCROLL DOWN TO DEAL CARDS
-              </span>
-              <ArrowDown className="w-4 h-4 text-red-500" />
-            </div>
+            <ArenaIntro
+              onRegister={() => scrollToChapter(CHAPTERS[2].scrollTarget)}
+              onBriefing={() => scrollToChapter(CHAPTERS[1].scrollTarget)}
+            />
           </motion.div>
 
           {/* Transparent Dismiss Click-Catcher when Card is Focused (Zero Blur, Zero Dimming) */}
@@ -541,12 +472,13 @@ export default function ContinuousScrollStage() {
           {/* Overlapping in center like poster, then moves half-out to sides   */}
           {/* ================================================================= */}
           <motion.div
+            data-arena-chapter="1"
             style={{
               scale: briefingEnterScale,
               opacity: briefingEnterOpacity,
             }}
             className={`absolute inset-0 flex items-center justify-center transition-all ${
-              activeChapter > 2 ? "pointer-events-none opacity-40" : ""
+              activeChapter !== 1 ? "pointer-events-none" : ""
             }`}
           >
             {/* Left Card: Round 1 FOURFOLD */}
@@ -564,10 +496,11 @@ export default function ContinuousScrollStage() {
                 suit="♠"
                 category="Round 1"
                 title="FOURFOLD"
-                subtitle="30-09-2026"
-                footerText="15 Qs Per Domain"
-                baseRotate={-7}
-                baseTranslateX={-150}
+                subtitle="Four technical domains and team debugging"
+                footerText="Top 10 teams advance"
+                width="w-[288px] xl:w-[302px]"
+                height="h-[380px] xl:h-[410px]"
+                baseTranslateX={-310}
                 zIndex={15}
               />
             </motion.div>
@@ -588,7 +521,9 @@ export default function ContinuousScrollStage() {
                 category="Venue"
                 title="SEMINAR HALL 1"
                 subtitle="Raman Block"
-                footerText="26th & 27th"
+                footerText="26–27 November 2026"
+                width="w-[288px] xl:w-[302px]"
+                height="h-[380px] xl:h-[410px]"
                 zIndex={35}
               />
             </motion.div>
@@ -608,10 +543,11 @@ export default function ContinuousScrollStage() {
                 suit="♥"
                 category="Round 2"
                 title="GAMBiT"
-                subtitle="30-09-2026"
-                footerText="Final Strategy"
-                baseRotate={7}
-                baseTranslateX={150}
+                subtitle="Surprise topic, pitch & judges’ Q&A"
+                footerText="5 min prep · 2 min pitch · 3 min Q&A"
+                width="w-[288px] xl:w-[302px]"
+                height="h-[380px] xl:h-[410px]"
+                baseTranslateX={310}
                 zIndex={15}
               />
             </motion.div>
@@ -622,6 +558,7 @@ export default function ContinuousScrollStage() {
           {/* Overlapping in hand, then moves half-out to sides                 */}
           {/* ================================================================= */}
           <motion.div
+            data-arena-chapter="2"
             style={{
               opacity: identityOpacity,
               y: identityInY,
@@ -653,7 +590,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "team"}
                 onFocusCard={() => setFocusedCardId("club")}
                 baseRotate={-6}
-                baseTranslateX={-90}
+                baseTranslateX={-156}
                 zIndex={focusedCardId === "club" ? 80 : 35}
                 footerText="CARD I // CLUB"
               >
@@ -716,7 +653,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "club"}
                 onFocusCard={() => setFocusedCardId("team")}
                 baseRotate={6}
-                baseTranslateX={90}
+                baseTranslateX={156}
                 zIndex={focusedCardId === "team" ? 80 : 30}
                 footerText="CARD II // TEAM"
               >
@@ -745,6 +682,7 @@ export default function ContinuousScrollStage() {
           {/* Overlapping in hand, then moves half-out to sides                 */}
           {/* ================================================================= */}
           <motion.div
+            data-arena-chapter="3"
             style={{
               opacity: squadAlphaOpacity,
               y: squadAlphaInY,
@@ -776,7 +714,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "m1"}
                 onFocusCard={() => setFocusedCardId("m0")}
                 baseRotate={-6}
-                baseTranslateX={-90}
+                baseTranslateX={-156}
                 zIndex={focusedCardId === "m0" ? 80 : 35}
                 footerText="15 QUESTIONS // REALM 1"
               >
@@ -851,7 +789,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "m0"}
                 onFocusCard={() => setFocusedCardId("m1")}
                 baseRotate={6}
-                baseTranslateX={90}
+                baseTranslateX={156}
                 zIndex={focusedCardId === "m1" ? 80 : 30}
                 footerText="15 QUESTIONS // REALM 2"
               >
@@ -909,6 +847,7 @@ export default function ContinuousScrollStage() {
           {/* Overlapping in hand, then moves half-out to sides                 */}
           {/* ================================================================= */}
           <motion.div
+            data-arena-chapter="4"
             style={{
               opacity: squadBravoOpacity,
               y: squadBravoInY,
@@ -940,7 +879,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "m3"}
                 onFocusCard={() => setFocusedCardId("m2")}
                 baseRotate={-6}
-                baseTranslateX={-90}
+                baseTranslateX={-156}
                 zIndex={focusedCardId === "m2" ? 80 : 35}
                 footerText="15 QUESTIONS // REALM 3"
               >
@@ -1015,7 +954,7 @@ export default function ContinuousScrollStage() {
                 isSiblingFocused={focusedCardId === "m2"}
                 onFocusCard={() => setFocusedCardId("m3")}
                 baseRotate={6}
-                baseTranslateX={90}
+                baseTranslateX={156}
                 zIndex={focusedCardId === "m3" ? 80 : 30}
                 footerText="15 QUESTIONS // REALM 4"
               >
@@ -1073,6 +1012,7 @@ export default function ContinuousScrollStage() {
           {/* All fields editable inline before final confirmation!             */}
           {/* ================================================================= */}
           <motion.div
+            data-arena-chapter="5"
             style={{
               opacity: dossierOpacity,
               scale: dossierScale,
@@ -1085,7 +1025,7 @@ export default function ContinuousScrollStage() {
             <div className="w-full max-w-2xl mx-auto p-2 relative z-50">
               {!registeredTeam ? (
                 /* Fully Editable Master Dossier */
-                <div className="rounded-2xl p-5 sm:p-6 playing-card-dark foil-glitter shadow-2xl border-2 border-red-700/60 backdrop-blur-xl max-h-[85vh] overflow-y-auto relative z-50">
+                <div className="arena-dossier rounded-2xl p-5 sm:p-6 playing-card-dark shadow-2xl overflow-y-auto relative z-50" data-lenis-prevent>
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
                     <div className="flex items-center gap-3">
@@ -1099,7 +1039,7 @@ export default function ContinuousScrollStage() {
                         </div>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-red-400 font-bold">26TH & 27TH</span>
+                    <span className="font-mono text-xs text-red-400 font-bold">26–27 NOV</span>
                   </div>
 
                   <p className="text-zinc-400 text-xs font-mono mb-3 text-left">
@@ -1298,24 +1238,12 @@ export default function ContinuousScrollStage() {
         {/* =================================================================== */}
         {/* BOTTOM MINIMAL SCROLL HINT                                          */}
         {/* =================================================================== */}
-        <footer className="relative z-40 flex items-center justify-between w-full max-w-6xl mx-auto border-t border-red-900/30 pt-3 text-xs font-mono text-zinc-500">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-            <span className="text-zinc-400">SEMINAR HALL 1 • RAMAN BLOCK</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-red-500 font-bold uppercase tracking-wider text-[11px]">
-              SCROLL DOWN TO DEAL CARDS ↓
-            </span>
-          </div>
-
-          <div className="text-[11px] text-zinc-500">
-            <span>26TH & 27TH TOURNAMENT</span>
-          </div>
+        <footer className="arena-footer">
+          <span>{activeChapter === 0 ? "Scroll to explore the arena" : "Scroll or use the chapter navigation"}</span>
+          <span>ABES Engineering College · Ghaziabad</span>
         </footer>
       </div>
     </div>
-  </>
+  </MotionConfig>
 );
 }

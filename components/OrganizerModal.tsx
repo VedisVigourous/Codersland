@@ -211,14 +211,15 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-fadeIn">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-fadeIn">
       {/* =================================================================== */}
       {/* CASE 1: LOCKED ORGANIZER GATE (ID & PASSKEY REQUIRED)               */}
       {/* =================================================================== */}
       {!isAuthenticated ? (
-        <div className="w-full max-w-md bg-[#0c0c14] border-2 border-red-900/80 rounded-2xl p-6 sm:p-7 flex flex-col shadow-laser relative">
+        <div className="arena-dossier w-full max-w-md rounded-2xl p-6 sm:p-7 flex flex-col shadow-2xl relative">
           <button
             onClick={onClose}
+            aria-label="Close organizer console"
             className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-all"
           >
             <X className="w-4 h-4" />
@@ -226,7 +227,7 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
 
           <div className="flex flex-col items-center text-center mb-6">
             <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-700 flex items-center justify-center mb-3">
-              <Lock className="w-6 h-6 text-red-500 animate-pulse" />
+              <Lock className="w-6 h-6 text-red-400" />
             </div>
             <div className="font-techno text-xs uppercase tracking-widest text-red-500 font-bold">
               TECHNOVATION RESTRICTED ACCESS

@@ -2,6 +2,8 @@
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
+import ArenaHeader from "./ArenaHeader";
+import ArenaIntro from "./ArenaIntro";
 import ClubEmblem from "./ClubEmblem";
 import CornerFiligree from "./CornerFiligree";
 import { sounds } from "@/lib/sounds";
@@ -11,8 +13,6 @@ import {
   AlertCircle,
   Copy,
   Download,
-  Volume2,
-  VolumeX,
   ArrowDown,
   ArrowRight,
   Shield,
@@ -66,6 +66,7 @@ export default function MobileScrollStage({
   copiedCode,
   copyCredentials,
 }: MobileScrollStageProps) {
+  const briefingRef = useRef<HTMLElement>(null);
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
@@ -74,61 +75,24 @@ export default function MobileScrollStage({
   const card6Ref = useRef<HTMLDivElement>(null);
   const dossierRef = useRef<HTMLDivElement>(null);
 
-  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+  const scrollToRef = (ref: React.RefObject<HTMLElement>) => {
     sounds.playCardClick();
-    ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    ref.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      block: "center",
+    });
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#050508] text-zinc-100 flex flex-col pb-24">
+    <div className="arena-compact relative w-full min-h-screen flex flex-col">
       {/* ===================================================================== */}
       {/* STICKY TOP MINIMAL NAV HEADER                                         */}
       {/* ===================================================================== */}
-      <header className="sticky top-0 z-50 w-full px-4 py-2.5 bg-black/85 backdrop-blur-md border-b border-red-950/80 flex items-center justify-between shadow-xl">
-        <div className="flex items-center gap-2">
-          <ClubEmblem size={20} />
-          <div className="flex flex-col">
-            <span className="font-techno text-[9px] tracking-[0.2em] text-[#ff113a] font-bold leading-none">
-              TECHNOVATION
-            </span>
-            <span className="font-baroque text-base text-zinc-100 tracking-wide leading-tight">
-              CoderLands
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleSound}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/80 border border-zinc-800 text-zinc-300 text-[10px] font-mono cursor-pointer"
-            title="Toggle Audio"
-          >
-            {audioEnabled ? (
-              <>
-                <Volume2 className="w-3 h-3 text-red-400" />
-                <span className="text-red-300 font-bold">ON</span>
-              </>
-            ) : (
-              <>
-                <VolumeX className="w-3 h-3 text-zinc-500" />
-                <span className="text-zinc-500">OFF</span>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={onOpenOrganizer}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-950/70 border border-red-800/80 text-red-300 text-[10px] font-mono cursor-pointer font-bold"
-          >
-            <ClubEmblem size={12} />
-            <span>ORGANIZER</span>
-          </button>
-        </div>
-      </header>
+      <ArenaHeader audioEnabled={audioEnabled} toggleSound={toggleSound} onOpenOrganizer={onOpenOrganizer} />
 
       {/* Global Error Banner */}
       {errorMessage && (
-        <div className="sticky top-12 z-50 mx-4 mt-2 px-3 py-2 rounded-xl bg-red-950/95 border border-red-600 text-red-200 text-xs font-mono flex items-center gap-2 shadow-laser animate-shake">
+        <div className="sticky top-16 z-50 mx-4 mt-2 px-3 py-2 rounded-xl bg-red-950/95 border border-red-600 text-red-200 text-xs font-mono flex items-center gap-2 shadow-laser animate-shake">
           <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>{errorMessage}</span>
         </div>
@@ -137,53 +101,31 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 1. INTRO HERO SECTION                                                 */}
       {/* ===================================================================== */}
-      <section className="min-h-[82vh] flex flex-col items-center justify-center text-center px-4 py-8 relative">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center max-w-sm"
-        >
-          {/* Technovation Crest */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/50 border border-red-700/60 text-red-400 mb-4 shadow-[0_0_15px_rgba(255,17,58,0.4)]">
-            <ClubEmblem size={18} />
-            <span className="font-techno tracking-[0.25em] text-[10px] uppercase text-red-500 font-bold">
-              TECHNOVATION PRESENTS
-            </span>
-          </div>
+      <section className="arena-compact-intro">
+        <ArenaIntro onRegister={() => scrollToRef(card1Ref)} onBriefing={() => scrollToRef(briefingRef)} />
+      </section>
 
-          {/* Gothic CoderLands Title */}
-          <h1 className="font-baroque text-6xl sm:text-7xl text-transparent bg-clip-text bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 tracking-wide drop-shadow-[0_10px_25px_rgba(255,17,58,0.5)] mb-2">
-            CoderLands
-          </h1>
-
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="h-px w-8 bg-red-600" />
-            <span className="font-sheepman text-xs tracking-[0.25em] uppercase text-red-500 font-black">
-              INTER-CLUB ARENA • 26TH & 27TH
-            </span>
-            <div className="h-px w-8 bg-red-600" />
-          </div>
-
-          <p className="text-zinc-300 text-xs font-body leading-relaxed mb-8 px-2">
-            Four Locked Realms. Four Domain Specialists. One Team Visa. Choose your domain specialists wisely before the arena locks.
-          </p>
-
-          <button
-            onClick={() => scrollToRef(card1Ref)}
-            className="flex flex-col items-center gap-1.5 px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-rose-700 text-white font-sheepman tracking-widest text-xs uppercase shadow-laser cursor-pointer hover:scale-105 active:scale-95 transition-all"
-          >
-            <span>START REGISTRATION</span>
-            <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-          </button>
-        </motion.div>
+      <section className="arena-compact-briefing" ref={briefingRef} aria-labelledby="compact-briefing-title">
+        <h2 id="compact-briefing-title" className="font-baroque">Event briefing</h2>
+        <div className="arena-rounds">
+          <article>
+            <p className="arena-kicker">Round 1</p>
+            <h3 className="font-sheepman">Fourfold</h3>
+            <p>Cloud, networking, cybersecurity and web development, followed by team debugging. The top 10 teams advance.</p>
+          </article>
+          <article>
+            <p className="arena-kicker">Round 2</p>
+            <h3 className="font-sheepman">Gambit</h3>
+            <p>Get a surprise topic, then use 5 minutes to prepare, 2 to pitch and 3 for judges’ questions.</p>
+          </article>
+        </div>
       </section>
 
       {/* ===================================================================== */}
       {/* 2. CARD 1: AFFILIATION // CLUB NAME                                   */}
       {/* ===================================================================== */}
-      <section ref={card1Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card1Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 1 OF 6 // AFFILIATION
         </div>
 
@@ -275,8 +217,8 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 3. CARD 2: SQUAD UNIT // TEAM NAME                                    */}
       {/* ===================================================================== */}
-      <section ref={card2Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card2Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 2 OF 6 // SQUAD UNIT
         </div>
 
@@ -351,8 +293,8 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 4. CARD 3: DOMAIN SPECIALIST // WEBDEV                                */}
       {/* ===================================================================== */}
-      <section ref={card3Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card3Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 3 OF 6 // REALM 1 SPECIALIST
         </div>
 
@@ -456,8 +398,8 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 5. CARD 4: DOMAIN SPECIALIST // CYBERSECURITY                         */}
       {/* ===================================================================== */}
-      <section ref={card4Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card4Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 4 OF 6 // REALM 2 SPECIALIST
         </div>
 
@@ -561,8 +503,8 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 6. CARD 5: DOMAIN SPECIALIST // CLOUD                                 */}
       {/* ===================================================================== */}
-      <section ref={card5Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card5Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 5 OF 6 // REALM 3 SPECIALIST
         </div>
 
@@ -666,8 +608,8 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 7. CARD 6: DOMAIN SPECIALIST // NETWORKING                            */}
       {/* ===================================================================== */}
-      <section ref={card6Ref} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
-        <div className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold mb-3">
+      <section ref={card6Ref} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
+        <div className="arena-stage-label">
           CARD 6 OF 6 // REALM 4 SPECIALIST
         </div>
 
@@ -771,7 +713,7 @@ export default function MobileScrollStage({
       {/* ===================================================================== */}
       {/* 8. MASTER VISA DOSSIER & CLEARANCE (FINAL REVIEW & SUBMIT)            */}
       {/* ===================================================================== */}
-      <section ref={dossierRef} className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
+      <section ref={dossierRef} className="arena-compact-stage flex flex-col items-center justify-center px-4 py-8 relative">
         <div className="w-full max-w-sm mx-auto">
           {!registeredTeam ? (
             /* Editable Master Dossier */
@@ -780,7 +722,7 @@ export default function MobileScrollStage({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.4 }}
-              className="rounded-2xl p-5 playing-card-dark foil-glitter shadow-2xl border-2 border-red-700/60 backdrop-blur-xl"
+              className="arena-dossier rounded-2xl p-5 playing-card-dark shadow-2xl"
             >
               <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
                 <div className="flex items-center gap-2.5">
@@ -794,7 +736,7 @@ export default function MobileScrollStage({
                     </div>
                   </div>
                 </div>
-                <span className="font-mono text-[10px] text-red-400 font-bold">26TH & 27TH</span>
+                <span className="font-mono text-[10px] text-red-400 font-bold">26–27 NOV</span>
               </div>
 
               <p className="text-zinc-400 text-xs font-mono mb-3 text-left">
@@ -986,8 +928,8 @@ export default function MobileScrollStage({
       </section>
 
       {/* Bottom Minimal Info */}
-      <footer className="text-center py-4 border-t border-red-950/40 text-[10px] font-mono text-zinc-500">
-        <span>SEMINAR HALL 1 • RAMAN BLOCK • 26TH & 27TH</span>
+      <footer className="arena-footer">
+        <span>ABES Engineering College · Ghaziabad</span>
       </footer>
     </div>
   );
