@@ -133,11 +133,11 @@
 
 /* Arena and registration surfaces */
 .arena-page {
-  --arena-ink: #121113;
+  --arena-ink: #090709;
   --arena-paper: #f5ebdb;
   --arena-muted: #c8bbab;
-  --arena-accent: #ee826b;
-  --arena-line: rgb(225 199 171 / 24%);
+  --arena-accent: #ee847a;
+  --arena-line: rgb(224 184 175 / 20%);
   color: var(--arena-paper);
   background: var(--arena-ink);
 }
@@ -145,24 +145,15 @@
 .arena-atmosphere,
 .arena-visa-screen {
   background:
-    radial-gradient(ellipse at 7% 32%, #292529 0%, transparent 45%),
-    radial-gradient(ellipse at 87% 78%, #321a17 0%, transparent 50%),
-    #141214;
+    radial-gradient(ellipse at 50% 105%, #340e16 0%, transparent 62%),
+    radial-gradient(ellipse at 10% 25%, #1b1016 0%, transparent 46%),
+    #0b090c;
 }
 
 .arena-atmosphere {
   position: fixed;
   inset: 0;
   pointer-events: none;
-}
-
-.arena-atmosphere::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: conic-gradient(#e9d0ba0a 25%, transparent 0 50%, #e9d0ba0a 0 75%, transparent 0);
-  background-size: 100px 100px;
-  mask-image: linear-gradient(transparent 48%, #000 100%);
 }
 
 .arena-desktop-view { display: none; }
@@ -182,7 +173,7 @@
   min-height: 64px;
   padding: 0.625rem 1rem;
   border: 1px solid var(--arena-line);
-  background: #191618;
+  background: #100b10;
 }
 
 .arena-brand,
@@ -253,19 +244,23 @@
 .arena-intro {
   position: relative;
   isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
   min-height: 100%;
-  padding: clamp(2rem, 5.1vw, 6rem);
-  border-inline: 1px solid var(--arena-line);
+  text-align: center;
   background:
-    linear-gradient(90deg, #101012 0%, #101012ed 19%, #11101380 53%, #130f1012 100%),
-    linear-gradient(0deg, #100e10 0%, transparent 33%),
-    #1e1817 url("/images/arena-hall.webp") center 58% / cover no-repeat;
+    radial-gradient(ellipse at 50% 39%, #0b0609db 0%, #0b06098c 33%, transparent 68%),
+    linear-gradient(180deg, #0b090c 0%, transparent 20% 67%, #0b090c 100%),
+    linear-gradient(90deg, #0b090c 0%, transparent 19% 81%, #0b090c 100%),
+    #190b12 url("/images/arena-hall-centered.webp") center 85% / cover no-repeat;
 }
 
-.arena-intro-copy { padding-bottom: clamp(4rem, 8vh, 8rem); }
+.arena-intro-copy {
+  align-self: center;
+  width: 100%;
+  padding: clamp(1.6rem, 4vh, 3rem) 1rem clamp(3.2rem, 9vh, 7rem);
+}
 
 .arena-kicker {
   color: var(--arena-accent);
@@ -276,25 +271,49 @@
 }
 
 .arena-intro h1 {
-  margin: 0.12em 0 0.13em -0.035em;
+  margin: 0.11em 0 0.1em;
   color: var(--arena-paper);
-  font-size: clamp(5.5rem, 9.5vw, 10rem);
-  line-height: 0.9;
-  text-shadow: 0 12px 36px #0b0708;
+  font-size: clamp(6rem, 11.8vw, 12rem);
+  line-height: 0.94;
+  text-shadow: 0 5px 26px #0b060a, 0 0 54px #9e20283d;
 }
 
+.arena-suits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  width: fit-content;
+  margin: 1.2rem auto 1.25rem;
+  color: #ceb4af;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.arena-suits::before,
+.arena-suits::after {
+  content: "";
+  width: clamp(1.25rem, 5vw, 4rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #9f575e);
+}
+
+.arena-suits::after { transform: scaleX(-1); }
+.arena-suits span:nth-child(even) { color: #e78680; }
+
 .arena-hook {
-  color: #f3dcc6;
-  font-size: clamp(1.25rem, 2.6vw, 2.25rem);
+  color: var(--arena-paper);
+  font-size: clamp(1.25rem, 2.15vw, 1.9rem);
   line-height: 1.2;
   font-weight: 600;
 }
 
 .arena-description {
-  max-width: 29rem;
-  margin-top: 0.75rem;
+  max-width: 32rem;
+  margin: 0.45rem auto 0;
   color: var(--arena-muted);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
@@ -302,8 +321,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
-  margin-top: 1.65rem;
+  margin-top: 1.35rem;
 }
 
 .arena-action,
@@ -317,44 +337,43 @@
 }
 
 .arena-action {
-  background: #b03425;
+  background: #a52a34;
   color: #fff5ed;
-  border-color: #ec7158;
+  border-color: #ca5a62;
 }
 
-.arena-action:hover { background: #c64230; }
+.arena-action:hover { background: #b93542; }
 
 .arena-text-action {
   color: var(--arena-paper);
-  background: #151214d9;
+  background: #140b12cc;
 }
 
 .arena-text-action:hover {
-  background: #372923;
-  border-color: #aa8c74;
+  background: #301820;
+  border-color: #9b666d;
 }
 
 .arena-event-facts {
-  position: absolute;
-  bottom: 0;
-  inset-inline: 0;
   display: grid;
-  grid-template-columns: 1fr 1.35fr 0.8fr;
-  padding: 0 clamp(1.25rem, 5.1vw, 6rem);
+  grid-template-columns: auto auto auto;
+  width: min(100%, 61rem);
+  padding-inline: 1rem;
   border-top: 1px solid var(--arena-line);
-  background: #171416e8;
+  background: linear-gradient(90deg, transparent, #0b080be6 12% 88%, transparent);
 }
 
 .arena-event-facts li {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.7rem;
-  min-height: 68px;
+  min-height: 64px;
   padding: 0.55rem 1rem;
   font-size: 0.9375rem;
+  text-align: left;
 }
 
-.arena-event-facts li:first-child { padding-inline-start: 0; }
 .arena-event-facts li + li { border-left: 1px solid var(--arena-line); }
 
 .arena-event-facts svg {
@@ -390,16 +409,10 @@
 
 .arena-compact-intro .arena-intro {
   min-height: max(520px, calc(88svh - 64px));
-  padding: clamp(1.25rem, 5vw, 3rem);
-  border-inline: 0;
-  background:
-    linear-gradient(90deg, #100e10ed, #100e1070 68%, #100e1029),
-    linear-gradient(0deg, #100e10 0%, transparent 70%),
-    #1e1817 url("/images/arena-hall.webp") right 55% / cover no-repeat;
+  background-position: center, center, center, center bottom;
 }
 
-.arena-compact-intro .arena-intro-copy { padding: 1.5rem 0 6.2rem; }
-.arena-compact-intro h1 { font-size: clamp(3.75rem, 13vw, 7rem); }
+.arena-compact-intro h1 { font-size: clamp(3.45rem, 18vw, 8.2rem); }
 
 .arena-compact-briefing {
   width: min(100%, 50rem);
@@ -505,25 +518,24 @@
   .arena-controls { gap: 0.35rem; }
   .arena-control { gap: 0.25rem; padding-inline: 0.45rem; font-size: 0.8125rem; }
   .arena-compact-intro .arena-intro { min-height: max(548px, calc(92svh - 64px)); }
-  .arena-compact-intro .arena-intro-copy { padding-bottom: 9rem; }
+  .arena-intro-copy { padding: 2rem 1rem 3rem; }
+  .arena-suits { margin-block: 1rem; }
   .arena-intro-actions { gap: 0.55rem; }
   .arena-action, .arena-text-action { padding-inline: 0.8rem; }
   .arena-kicker { font-size: 0.8125rem; letter-spacing: 0.09em; }
   .arena-event-facts {
-    padding: 0.5rem 1rem;
+    width: min(100% - 2rem, 25rem);
+    justify-content: center;
     grid-template-columns: 1fr;
+    padding: 0.55rem 0.35rem 0.65rem;
   }
-  .arena-event-facts li,
-  .arena-event-facts li:first-child {
-    min-height: 31px;
-    padding: 0.25rem 0.2rem;
+  .arena-event-facts li {
+    min-height: 30px;
+    justify-content: center;
+    padding: 0.15rem 0.25rem;
+    text-align: center;
   }
   .arena-event-facts li + li { border-left: 0; }
-  .arena-event-facts small { display: inline; margin-left: 0.35rem; }
   .arena-compact input { font-size: 1rem; }
   .arena-visa-sound { position: relative; top: auto; right: auto; margin-top: 0.35rem; }
-}
-
-@media (max-width: 410px) {
-  .arena-event-facts small { display: block; margin-left: 0; }
 }

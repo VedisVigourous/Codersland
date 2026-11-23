@@ -217,7 +217,7 @@ export default function VisaPasscardView({
           {/* Card Header: Technovation & Team ID */}
           <div className="flex items-start justify-between border-b border-amber-900/20 pb-2 mb-2.5 relative z-10">
             <div className="flex items-center gap-1.5">
-              <span className="font-baroque text-lg text-red-600 font-bold leading-none">И</span>
+              <ClubEmblem size={18} />
               <div>
                 <span className="block font-mono text-[9px] font-bold text-red-800 tracking-wider uppercase">
                   TECHNOVATION • 14 DAYS

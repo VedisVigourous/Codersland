@@ -6,9 +6,15 @@ export default function ArenaIntro({ onRegister, onBriefing }: { onRegister: () 
       <div className="arena-intro-copy">
         <p className="arena-kicker">Interclub technical competition</p>
         <h1 className="font-baroque">CoderLands</h1>
+        <div className="arena-suits" aria-hidden="true">
+          <span>♠︎</span>
+          <span>♦︎</span>
+          <span>♣︎</span>
+          <span>♥︎</span>
+        </div>
         <p className="arena-hook">How far can you go?</p>
         <p className="arena-description">
-          Four specialists. Two rounds. Build your team, take on the technical challenges, and make your next move count.
+          Four specialists. Two rounds. Make your next move count.
         </p>
         <div className="arena-intro-actions">
           <button type="button" className="arena-action" onClick={onRegister}>Start registration</button>
