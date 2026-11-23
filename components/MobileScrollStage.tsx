@@ -20,17 +20,6 @@ import {
 } from "lucide-react";
 import type { MemberData } from "./ContinuousScrollStage";
 
-const POPULAR_CLUBS = [
-  "Technovation",
-  "ACM Chapter",
-  "IEEE Society",
-  "GDSC / GDG",
-  "CSI Chapter",
-  "CodeChef",
-  "Rotaract Tech",
-  "CyberOps",
-];
-
 interface MobileScrollStageProps {
   clubName: string;
   setClubName: (name: string) => void;
@@ -161,31 +150,14 @@ export default function MobileScrollStage({
               </label>
               <input
                 type="text"
-                placeholder="e.g. Technovation"
+                placeholder="Enter Club Name"
                 value={clubName}
                 onChange={(e) => setClubName(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-sm outline-none"
               />
-
-              <div className="flex flex-wrap gap-1 pt-1">
-                {POPULAR_CLUBS.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => {
-                      sounds.playCardClick();
-                      setClubName(c);
-                    }}
-                    className={`text-[10px] px-2 py-0.5 rounded font-medium transition-all cursor-pointer ${
-                      clubName === c
-                        ? "bg-red-700 text-white font-bold"
-                        : "bg-stone-200 hover:bg-stone-300 text-stone-800"
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+              <p className="text-[10px] text-stone-600 font-body bg-amber-900/10 p-2 rounded leading-tight">
+                Must represent your registered university society, student chapter, or independent team.
+              </p>
             </div>
           </div>
 
@@ -340,11 +312,11 @@ export default function MobileScrollStage({
 
               <div>
                 <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                  Email / Student ID:
+                  College Email (@abes.ac.in): *
                 </label>
                 <input
                   type="email"
-                  placeholder="arisu@college.edu"
+                  placeholder="student@abes.ac.in"
                   value={members[0].email}
                   onChange={(e) => updateMember(0, "email", e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
@@ -445,11 +417,11 @@ export default function MobileScrollStage({
 
               <div>
                 <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                  Email / Student ID:
+                  College Email (@abes.ac.in): *
                 </label>
                 <input
                   type="email"
-                  placeholder="usagi@college.edu"
+                  placeholder="student@abes.ac.in"
                   value={members[1].email}
                   onChange={(e) => updateMember(1, "email", e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
@@ -550,11 +522,11 @@ export default function MobileScrollStage({
 
               <div>
                 <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                  Email / Student ID:
+                  College Email (@abes.ac.in): *
                 </label>
                 <input
                   type="email"
-                  placeholder="chishiya@college.edu"
+                  placeholder="student@abes.ac.in"
                   value={members[2].email}
                   onChange={(e) => updateMember(2, "email", e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
@@ -655,11 +627,11 @@ export default function MobileScrollStage({
 
               <div>
                 <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                  Email / Student ID:
+                  College Email (@abes.ac.in): *
                 </label>
                 <input
                   type="email"
-                  placeholder="kuina@college.edu"
+                  placeholder="student@abes.ac.in"
                   value={members[3].email}
                   onChange={(e) => updateMember(3, "email", e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
@@ -810,7 +782,7 @@ export default function MobileScrollStage({
                       type="email"
                       value={m.email}
                       onChange={(e) => updateMember(idx, "email", e.target.value)}
-                      placeholder="Email / Contact"
+                      placeholder="student@abes.ac.in"
                       className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-300 text-[11px] outline-none font-mono"
                     />
                   </div>

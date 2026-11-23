@@ -32,17 +32,6 @@ export interface MemberData {
   domain: DomainType;
 }
 
-const POPULAR_CLUBS = [
-  "Technovation",
-  "ACM Student Chapter",
-  "IEEE Computer Society",
-  "GDSC / GDG",
-  "CSI Chapter",
-  "CodeChef Campus",
-  "Rotaract Tech",
-  "CyberOps Syndicate",
-];
-
 const CHAPTERS = [
   { id: 0, label: "Intro", scrollTarget: 0 },
   { id: 1, label: "Briefing", scrollTarget: 0.16 },
@@ -57,7 +46,7 @@ export default function ContinuousScrollStage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Sound state
-  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const [isOrganizerOpen, setIsOrganizerOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState(0);
 
@@ -105,12 +94,47 @@ export default function ContinuousScrollStage() {
   }, [activeChapter, registeredTeam]);
 
   useEffect(() => {
+    sounds.setEnabled(true);
+
     const audio = document.createElement("audio");
-    audio.preload = "none";
+    audio.preload = "auto";
     audio.src = "/themesong.mp3";
     audio.loop = true;
     audio.volume = 0.25;
     audioRef.current = audio;
+
+    const playAudio = () => {
+      if (!audioRef.current) return;
+      sounds.unlock();
+      audioRef.current
+        .play()
+        .then(() => {
+          setAudioEnabled(true);
+          sounds.setEnabled(true);
+          cleanupInteractions();
+        })
+        .catch(() => {
+          // Handled if browser blocks initial autoplay before interaction
+        });
+    };
+
+    const cleanupInteractions = () => {
+      window.removeEventListener("click", playAudio);
+      window.removeEventListener("touchstart", playAudio);
+      window.removeEventListener("scroll", playAudio);
+      window.removeEventListener("keydown", playAudio);
+      window.removeEventListener("pointerdown", playAudio);
+    };
+
+    // 1. Attempt immediate autoplay when page loads
+    playAudio();
+
+    // 2. Instant fallback: on very first interaction (click, tap, scroll, key), start music
+    window.addEventListener("click", playAudio, { once: true });
+    window.addEventListener("touchstart", playAudio, { once: true });
+    window.addEventListener("scroll", playAudio, { once: true });
+    window.addEventListener("keydown", playAudio, { once: true });
+    window.addEventListener("pointerdown", playAudio, { once: true });
 
     const onPlaying = () => {
       if (audio.paused) return;
@@ -118,20 +142,21 @@ export default function ContinuousScrollStage() {
       setAudioEnabled(true);
     };
     const onStopped = () => {
-      sounds.setEnabled(false);
-      setAudioEnabled(false);
+      if (audio.paused) {
+        sounds.setEnabled(false);
+        setAudioEnabled(false);
+      }
     };
 
     audio.addEventListener("playing", onPlaying);
     audio.addEventListener("pause", onStopped);
     audio.addEventListener("error", onStopped);
-    audio.addEventListener("ended", onStopped);
 
     return () => {
+      cleanupInteractions();
       audio.removeEventListener("playing", onPlaying);
       audio.removeEventListener("pause", onStopped);
       audio.removeEventListener("error", onStopped);
-      audio.removeEventListener("ended", onStopped);
       audio.pause();
       sounds.setEnabled(false);
       audioRef.current = null;
@@ -293,6 +318,15 @@ export default function ContinuousScrollStage() {
     for (let i = 0; i < 4; i++) {
       if (!members[i].name.trim()) {
         setErrorMessage(`Player #${i + 1} name is missing. Please enter all 4 player names.`);
+        return;
+      }
+      const email = members[i].email.trim().toLowerCase();
+      if (!email) {
+        setErrorMessage(`Player #${i + 1} (${members[i].name}) email is missing. Only @abes.ac.in emails are allowed.`);
+        return;
+      }
+      if (!email.endsWith("@abes.ac.in")) {
+        setErrorMessage(`Player #${i + 1} (${members[i].name}) email must be an official @abes.ac.in address.`);
         return;
       }
     }
@@ -594,38 +628,21 @@ export default function ContinuousScrollStage() {
                 zIndex={focusedCardId === "club" ? 80 : 35}
                 footerText="CARD I // CLUB"
               >
-                <div className="space-y-2 text-left">
+                <div className="space-y-2.5 text-left">
                   <label className="text-[10px] font-mono uppercase font-bold text-stone-800 block">
                     Enter Club Name:
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Technovation"
+                    placeholder="Enter Club Name"
                     value={clubName}
                     onFocus={() => setFocusedCardId("club")}
                     onChange={(e) => setClubName(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-xs sm:text-sm outline-none"
                   />
-                  <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto pt-0.5">
-                    {POPULAR_CLUBS.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => {
-                          sounds.playCardClick();
-                          setClubName(c);
-                          setFocusedCardId("club");
-                        }}
-                        className={`text-[10px] px-2 py-0.5 rounded font-medium transition-all cursor-pointer ${
-                          clubName === c
-                            ? "bg-red-700 text-white font-bold"
-                            : "bg-stone-200 hover:bg-stone-300 text-stone-800"
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
+                  <p className="text-[10px] text-stone-600 font-body bg-amber-900/10 p-2 rounded leading-tight">
+                    Must represent your registered university society, student chapter, or independent team.
+                  </p>
                 </div>
               </RoyalDirectCard>
             </motion.div>
@@ -734,11 +751,11 @@ export default function ContinuousScrollStage() {
                   </div>
                   <div>
                     <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                      Email / Student ID:
+                      College Email (@abes.ac.in): *
                     </label>
                     <input
                       type="email"
-                      placeholder="arisu@college.edu"
+                      placeholder="student@abes.ac.in"
                       value={members[0].email}
                       onFocus={() => setFocusedCardId("m0")}
                       onChange={(e) => updateMember(0, "email", e.target.value)}
@@ -809,11 +826,11 @@ export default function ContinuousScrollStage() {
                   </div>
                   <div>
                     <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                      Email / Student ID:
+                      College Email (@abes.ac.in): *
                     </label>
                     <input
                       type="email"
-                      placeholder="usagi@college.edu"
+                      placeholder="student@abes.ac.in"
                       value={members[1].email}
                       onFocus={() => setFocusedCardId("m1")}
                       onChange={(e) => updateMember(1, "email", e.target.value)}
@@ -899,11 +916,11 @@ export default function ContinuousScrollStage() {
                   </div>
                   <div>
                     <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                      Email / Student ID:
+                      College Email (@abes.ac.in): *
                     </label>
                     <input
                       type="email"
-                      placeholder="chishiya@college.edu"
+                      placeholder="student@abes.ac.in"
                       value={members[2].email}
                       onFocus={() => setFocusedCardId("m2")}
                       onChange={(e) => updateMember(2, "email", e.target.value)}
@@ -974,11 +991,11 @@ export default function ContinuousScrollStage() {
                   </div>
                   <div>
                     <label className="text-[10px] font-mono uppercase font-bold text-stone-700 block mb-0.5">
-                      Email / Student ID:
+                      College Email (@abes.ac.in): *
                     </label>
                     <input
                       type="email"
-                      placeholder="kuina@college.edu"
+                      placeholder="student@abes.ac.in"
                       value={members[3].email}
                       onFocus={() => setFocusedCardId("m3")}
                       onChange={(e) => updateMember(3, "email", e.target.value)}
@@ -1112,7 +1129,7 @@ export default function ContinuousScrollStage() {
                             type="email"
                             value={m.email}
                             onChange={(e) => updateMember(idx, "email", e.target.value)}
-                            placeholder="Email / Contact"
+                            placeholder="student@abes.ac.in"
                             className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-300 text-[11px] outline-none font-mono"
                           />
                         </div>

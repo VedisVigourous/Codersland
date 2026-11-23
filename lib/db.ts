@@ -272,6 +272,16 @@ export async function registerTeam(input: RegisterInput): Promise<{
       if (!m.name || !m.name.trim()) {
         return { success: false, error: `Member #${i + 1} name is missing.` };
       }
+      const email = m.email?.trim().toLowerCase();
+      if (!email) {
+        return { success: false, error: `Member #${i + 1} (${m.name}) email is required.` };
+      }
+      if (!email.endsWith("@abes.ac.in")) {
+        return {
+          success: false,
+          error: `Member #${i + 1} (${m.name}) must use an official @abes.ac.in college email address.`,
+        };
+      }
     }
 
     // 3. Exactly 1 team leader

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="22" fill="#050508"/>
+  <rect width="96" height="96" x="2" y="2" rx="20" fill="none" stroke="#ff113a" stroke-width="2" opacity="0.4"/>
+  <g fill="#ff113a">
+    {/* Technovation 'N' / Inverted Cyrillic Emblem */}
+    <path d="M 18 12 L 38 12 L 38 50 L 62 12 L 82 12 L 82 88 L 62 88 L 62 50 L 38 88 L 18 88 Z" />
+    <polygon points="12,12 18,12 12,18" fill="#b91c1c"/>
+    <polygon points="82,82 88,82 88,88" fill="#b91c1c"/>
+  </g>
+</svg>
