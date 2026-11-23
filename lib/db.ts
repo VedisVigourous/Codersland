@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Redis } from "@upstash/redis";
 
 export interface TeamMember {
   name: string;
@@ -27,14 +28,31 @@ export interface TeamRegistration {
   };
 }
 
+// Support both Upstash Redis and Vercel KV environment variable standards
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+export const isCloudDb = Boolean(redisUrl && redisToken);
+
+const redis = isCloudDb
+  ? new Redis({
+      url: redisUrl!,
+      token: redisToken!,
+    })
+  : null;
+
 const DATA_DIR = path.join(process.cwd(), "data");
 const REGISTRATIONS_FILE = path.join(DATA_DIR, "registrations.json");
 const AUDIT_LOG_FILE = path.join(DATA_DIR, "audit_log.jsonl");
 const QUIZ_SYNC_FILE = path.join(DATA_DIR, "quiz_event_teams.json");
 
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+// Safely ensure data directory exists for local development
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+} catch {
+  // Ignored in read-only serverless environments
 }
 
 // In-memory Mutex Queue to guarantee serial atomic execution for high concurrency
@@ -57,48 +75,97 @@ class AsyncMutex {
 
 const dbMutex = new AsyncMutex();
 
-// Read existing registrations safely
-function readRegistrationsUnsafe(): TeamRegistration[] {
+// Local file reading fallback
+function readRegistrationsFromDisk(): TeamRegistration[] {
   try {
     if (!fs.existsSync(REGISTRATIONS_FILE)) {
-      fs.writeFileSync(REGISTRATIONS_FILE, JSON.stringify([], null, 2), "utf8");
       return [];
     }
     const data = fs.readFileSync(REGISTRATIONS_FILE, "utf8");
     if (!data.trim()) return [];
     return JSON.parse(data);
   } catch (err) {
-    console.error("Error reading registrations, returning empty array fallback:", err);
+    console.error("Local disk read fallback:", err);
     return [];
   }
 }
 
-// Write registrations atomically using a temporary file
-function writeRegistrationsAtomic(registrations: TeamRegistration[]): void {
-  const tempPath = path.join(DATA_DIR, `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.json`);
-  const content = JSON.stringify(registrations, null, 2);
-  fs.writeFileSync(tempPath, content, "utf8");
-  fs.renameSync(tempPath, REGISTRATIONS_FILE);
+// Unified reader (Redis cloud DB with local disk fallback)
+async function readRegistrationsUnified(): Promise<TeamRegistration[]> {
+  if (redis) {
+    try {
+      const data = await redis.get<TeamRegistration[] | string>("coderlands:registrations");
+      if (!data) return [];
+      if (Array.isArray(data)) return data;
+      if (typeof data === "string") return JSON.parse(data);
+      return [];
+    } catch (err) {
+      console.error("Upstash Redis read error, trying local fallback:", err);
+      return readRegistrationsFromDisk();
+    }
+  }
+  return readRegistrationsFromDisk();
+}
 
-  // Also sync a quiz-friendly schema file
-  const quizTeamMap = registrations.map((t) => ({
-    teamId: t.id,
-    passcode: t.passcode,
-    teamName: t.teamName,
-    clubName: t.clubName,
-    domains: {
-      "Web Development": t.domainMap.webDev,
-      "Cybersecurity": t.domainMap.cybersecurity,
-      "Cloud": t.domainMap.cloud,
-      "Networking": t.domainMap.networking,
-    },
-    members: t.members,
-  }));
-  fs.writeFileSync(QUIZ_SYNC_FILE, JSON.stringify(quizTeamMap, null, 2), "utf8");
+// Local file atomic writing
+function writeRegistrationsToDisk(registrations: TeamRegistration[]): void {
+  try {
+    const tempPath = path.join(DATA_DIR, `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.json`);
+    const content = JSON.stringify(registrations, null, 2);
+    fs.writeFileSync(tempPath, content, "utf8");
+    fs.renameSync(tempPath, REGISTRATIONS_FILE);
+
+    // Sync quiz event teams schema
+    const quizTeamMap = registrations.map((t) => ({
+      teamId: t.id,
+      passcode: t.passcode,
+      teamName: t.teamName,
+      clubName: t.clubName,
+      domains: {
+        "Web Development": t.domainMap.webDev,
+        "Cybersecurity": t.domainMap.cybersecurity,
+        "Cloud": t.domainMap.cloud,
+        "Networking": t.domainMap.networking,
+      },
+      members: t.members,
+    }));
+    fs.writeFileSync(QUIZ_SYNC_FILE, JSON.stringify(quizTeamMap, null, 2), "utf8");
+  } catch (err) {
+    console.error("Local disk write error (expected on serverless):", err);
+  }
+}
+
+// Unified writer (Redis cloud DB with local disk fallback)
+async function writeRegistrationsUnified(registrations: TeamRegistration[]): Promise<void> {
+  if (redis) {
+    try {
+      await redis.set("coderlands:registrations", registrations);
+      return;
+    } catch (err) {
+      console.error("Upstash Redis write error:", err);
+      throw new Error("Cloud database write failed: " + (err instanceof Error ? err.message : String(err)));
+    }
+  }
+  writeRegistrationsToDisk(registrations);
 }
 
 // Append-only Write Ahead Log (WAL)
-function appendAuditLog(event: string, payload: any): void {
+async function appendAuditLog(event: string, payload: any): Promise<void> {
+  if (redis) {
+    try {
+      await redis.lpush(
+        "coderlands:audit_log",
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          event,
+          payload,
+        })
+      );
+      return;
+    } catch (err) {
+      console.error("Redis audit log error:", err);
+    }
+  }
   try {
     const entry = JSON.stringify({
       timestamp: new Date().toISOString(),
@@ -106,8 +173,8 @@ function appendAuditLog(event: string, payload: any): void {
       payload,
     }) + "\n";
     fs.appendFileSync(AUDIT_LOG_FILE, entry, "utf8");
-  } catch (err) {
-    console.error("Failed to append audit log:", err);
+  } catch {
+    // Silent fail in read-only environments
   }
 }
 
@@ -133,7 +200,7 @@ function generatePasscode(): string {
 // Public API Functions wrapped in Mutex
 export async function getRegistrations(): Promise<TeamRegistration[]> {
   return dbMutex.dispatch(async () => {
-    return readRegistrationsUnsafe();
+    return readRegistrationsUnified();
   });
 }
 
@@ -179,7 +246,7 @@ export async function registerTeam(input: RegisterInput): Promise<{
       return { success: false, error: "Please designate exactly one member as Team Lead." };
     }
 
-    // 4. Domains validation: must cover Web Development, Cybersecurity, Cloud, Networking without duplicates
+    // 4. Domains validation
     const requiredDomains: Array<TeamMember["domain"]> = [
       "Web Development",
       "Cybersecurity",
@@ -195,7 +262,7 @@ export async function registerTeam(input: RegisterInput): Promise<{
     }
 
     // 5. Check duplicate team names
-    const existing = readRegistrationsUnsafe();
+    const existing = await readRegistrationsUnified();
     const duplicate = existing.find(
       (t) => t.teamName.toLowerCase().trim() === team.toLowerCase()
     );
@@ -210,7 +277,6 @@ export async function registerTeam(input: RegisterInput): Promise<{
     const id = generateTeamId();
     const passcode = generatePasscode();
 
-    // Map domains to member names for quick lookup in quiz site
     const webDevMember = input.members.find((m) => m.domain === "Web Development")?.name || "";
     const cyberMember = input.members.find((m) => m.domain === "Cybersecurity")?.name || "";
     const cloudMember = input.members.find((m) => m.domain === "Cloud")?.name || "";
@@ -240,10 +306,10 @@ export async function registerTeam(input: RegisterInput): Promise<{
       },
     };
 
-    // 7. Atomic Write & WAL Append
+    // 7. Unified Write & WAL Append
     existing.push(newRegistration);
-    writeRegistrationsAtomic(existing);
-    appendAuditLog("TEAM_REGISTERED", {
+    await writeRegistrationsUnified(existing);
+    await appendAuditLog("TEAM_REGISTERED", {
       teamId: id,
       teamName: team,
       clubName: club,
