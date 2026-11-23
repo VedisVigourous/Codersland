@@ -101,7 +101,7 @@ export default function ContinuousScrollStage() {
 
   // Background Theme Song Initialization
   useEffect(() => {
-    const audio = new Audio("/themeSong.mp3");
+    const audio = new Audio("/themesong.mp3");
     audio.loop = true;
     audio.volume = 0.25; // 25% volume as requested (mild, immersive)
     audioRef.current = audio;
@@ -109,19 +109,22 @@ export default function ContinuousScrollStage() {
     const startAudio = () => {
       if (audioRef.current && audioEnabled) {
         audioRef.current.play().catch(() => {
-          // Handled if browser blocks autoplay until click
+          // Handled if browser blocks autoplay until interaction
         });
       }
       window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
       window.removeEventListener("scroll", startAudio);
     };
 
     window.addEventListener("click", startAudio);
+    window.addEventListener("touchstart", startAudio);
     window.addEventListener("scroll", startAudio);
 
     return () => {
       audio.pause();
       window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
       window.removeEventListener("scroll", startAudio);
     };
   }, []);
@@ -307,6 +310,7 @@ export default function ContinuousScrollStage() {
       }
 
       setRegisteredTeam(data.team);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       sounds.playVisaGranted();
       confetti({
         particleCount: 110,
@@ -332,7 +336,7 @@ export default function ContinuousScrollStage() {
   // If registration is complete, render ONLY the isolated Visa Passcard screen!
   if (registeredTeam) {
     return (
-      <div className="relative min-h-screen bg-[#050508] text-zinc-100 flex flex-col justify-between p-4 z-50">
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-[#050508]">
         <VisaPasscardView
           registeredTeam={registeredTeam}
           onReset={() => {
@@ -346,7 +350,7 @@ export default function ContinuousScrollStage() {
               { name: "", email: "", phone: "", isLeader: false, domain: "Cloud" },
               { name: "", email: "", phone: "", isLeader: false, domain: "Networking" },
             ]);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0, behavior: "instant" });
           }}
           audioEnabled={audioEnabled}
           toggleSound={toggleSound}

@@ -28,16 +28,50 @@ export interface TeamRegistration {
   };
 }
 
-// Support both Upstash Redis and Vercel KV environment variable standards
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+// Dynamically resolve Upstash Redis / Vercel KV environment variables
+function getRedisCredentials(): { url?: string; token?: string } {
+  let url =
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.KV_REST_API_URL ||
+    process.env.REDIS_REST_URL;
 
-export const isCloudDb = Boolean(redisUrl && redisToken);
+  let token =
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.KV_REST_API_TOKEN ||
+    process.env.REDIS_REST_TOKEN;
+
+  // Fallback scan for any environment variables created by Upstash Marketplace Integration
+  if (!url || !token) {
+    for (const [key, val] of Object.entries(process.env)) {
+      if (!val) continue;
+      const upper = key.toUpperCase();
+      if (
+        (upper.includes("UPSTASH") || upper.includes("REDIS") || upper.includes("KV")) &&
+        upper.includes("URL") &&
+        val.startsWith("https://")
+      ) {
+        if (!url) url = val;
+      }
+      if (
+        (upper.includes("UPSTASH") || upper.includes("REDIS") || upper.includes("KV")) &&
+        (upper.includes("TOKEN") || upper.includes("REST_TOKEN")) &&
+        !upper.includes("READ_ONLY")
+      ) {
+        if (!token) token = val;
+      }
+    }
+  }
+
+  return { url, token };
+}
+
+const creds = getRedisCredentials();
+export const isCloudDb = Boolean(creds.url && creds.token);
 
 const redis = isCloudDb
   ? new Redis({
-      url: redisUrl!,
-      token: redisToken!,
+      url: creds.url!,
+      token: creds.token!,
     })
   : null;
 
