@@ -313,7 +313,7 @@ export default function VisaPasscardView({
               <span className="text-stone-500">Raman Block · 26–27 Nov</span>
             </div>
             <div className="flex flex-col text-right">
-              <span className="font-bold text-red-700 uppercase tracking-wide">BORDERLAND VISA</span>
+              <span className="font-bold text-red-700 uppercase tracking-wide">CODERLAND VISA</span>
               <span className="text-stone-500 font-semibold">1 Team Visa • Active</span>
             </div>
           </div>

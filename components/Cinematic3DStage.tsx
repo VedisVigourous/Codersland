@@ -1225,18 +1225,13 @@ export default function Cinematic3DStage() {
                 /* Stage A: Pre-Submit Dossier Contract */
                 <div className="w-full rounded-2xl p-5 sm:p-6 playing-card-dark foil-glitter shadow-2xl relative my-auto">
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <ClubEmblem size={24} />
-                      <div>
-                        <div className="font-techno text-[10px] text-red-500 font-bold tracking-widest uppercase">
-                          TECHNOVATION ARENA CONTRACT
-                        </div>
-                        <div className="font-baroque text-xl text-zinc-100">
-                          Borderland Visa Application
-                        </div>
-                      </div>
                     </div>
-                    <span className="font-mono text-xs text-red-400 font-bold">26TH & 27TH</span>
+                    <div className="font-baroque text-lg sm:text-xl text-zinc-100 font-bold tracking-wide text-center">
+                      Coderland Visa Application
+                    </div>
+                    <span className="font-mono text-xs text-red-400 font-bold">26–27 NOV · CL-2026</span>
                   </div>
 
                   {/* Identity Summary */}
@@ -1299,19 +1294,9 @@ export default function Cinematic3DStage() {
                     <button
                       disabled={isSubmitting}
                       onClick={handleSubmitRegistration}
-                      className="px-7 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-sheepman tracking-widest text-sm uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2"
+                      className="px-7 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
                     >
-                      {isSubmitting ? (
-                        <>
-                          <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>SEALING VISA...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 text-amber-300" />
-                          <span>CLAIM VISA & ENTER ARENA</span>
-                        </>
-                      )}
+                      {isSubmitting ? "Locking Registration..." : "Lock Registration"}
                     </button>
                   </div>
                 </div>
@@ -1323,7 +1308,7 @@ export default function Cinematic3DStage() {
                       <ClubEmblem size={28} />
                       <div>
                         <div className="font-techno text-[10px] text-red-800 font-bold uppercase tracking-widest">
-                          BORDERLAND VISA • CONFIRMED
+                          CODERLAND VISA • CONFIRMED
                         </div>
                         <div className="font-baroque text-2xl text-stone-900">
                           CoderLands Player Pass

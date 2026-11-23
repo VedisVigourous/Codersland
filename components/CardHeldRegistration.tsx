@@ -733,7 +733,7 @@ export default function CardHeldRegistration() {
         <div className="flex flex-col items-center">
           <div className="text-center mb-6">
             <h2 className="font-sheepman text-3xl sm:text-4xl uppercase text-zinc-100 tracking-wider">
-              CONFIRM BORDERLAND VISA CONTRACT
+              CONFIRM CODERLANDS VISA CONTRACT
             </h2>
             <p className="text-zinc-400 text-sm mt-1 max-w-lg">
               Review all squad parameters before sealing registration. Once locked, credentials are saved to the persistent arena database.
@@ -742,22 +742,16 @@ export default function CardHeldRegistration() {
 
           {/* Master Visa Application Dossier Card */}
           <div className="w-full max-w-2xl rounded-2xl p-6 sm:p-8 playing-card-dark foil-glitter shadow-2xl relative overflow-hidden">
-            {/* Header */}
+            {/* Single Line Header */}
             <div className="flex items-center justify-between border-b border-red-900/40 pb-4 mb-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <ClubEmblem size={28} />
-                <div>
-                  <div className="font-techno text-xs uppercase tracking-widest text-red-500 font-bold">
-                    TECHNOVATION ARENA CONTRACT
-                  </div>
-                  <div className="font-baroque text-2xl text-zinc-100">
-                    CoderLands Visa Application
-                  </div>
-                </div>
               </div>
-              <div className="text-right">
-                <div className="font-mono text-xs text-red-400 font-bold">EVENT DATE</div>
-                <div className="font-mono text-xs text-zinc-400">26TH & 27TH</div>
+              <div className="font-baroque text-2xl text-zinc-100 font-bold tracking-wide text-center">
+                Coderlands Visa Application
+              </div>
+              <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
+                26–27 NOV · CL-2026
               </div>
             </div>
 
@@ -840,19 +834,9 @@ export default function CardHeldRegistration() {
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSubmitRegistration}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 text-white font-sheepman tracking-widest text-base uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-base uppercase shadow-laser hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
               >
-                {isSubmitting ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>SEALING BORDERLAND VISA...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>CLAIM VISA & ENTER EVENT</span>
-                  </>
-                )}
+                {isSubmitting ? "Locking Registration..." : "Lock Registration"}
               </button>
             </div>
           </div>

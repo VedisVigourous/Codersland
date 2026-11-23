@@ -9,6 +9,7 @@ import RoyalDirectCard from "./RoyalDirectCard";
 import OrganizerModal from "./OrganizerModal";
 import MobileScrollStage from "./MobileScrollStage";
 import VisaPasscardView from "./VisaPasscardView";
+import CornerFiligree from "./CornerFiligree";
 import { sounds } from "@/lib/sounds";
 import confetti from "canvas-confetti";
 import {
@@ -1042,77 +1043,80 @@ export default function ContinuousScrollStage() {
             <div className="w-full max-w-2xl mx-auto p-2 relative z-50">
               {!registeredTeam ? (
                 /* Fully Editable Master Dossier */
-                <div className="arena-dossier rounded-2xl p-5 sm:p-6 playing-card-dark shadow-2xl overflow-y-auto relative z-50" data-lenis-prevent>
-                  {/* Header */}
-                  <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3">
-                    <div className="flex items-center gap-3">
-                      <ClubEmblem size={26} />
-                      <div>
-                        <div className="font-techno text-[10px] text-red-500 uppercase tracking-widest font-bold">
-                          TECHNOVATION ARENA CONTRACT
-                        </div>
-                        <div className="font-baroque text-2xl text-zinc-100">
-                          Borderland Visa Application
-                        </div>
-                      </div>
+                <div className="arena-dossier rounded-2xl p-5 sm:p-7 bg-[#0d090d]/95 backdrop-blur-xl border-2 border-red-900/60 shadow-[0_0_50px_rgba(255,17,58,0.25),0_25px_60px_rgba(0,0,0,0.95)] overflow-y-auto relative z-50" data-lenis-prevent>
+                  {/* Ornate Corner Accents */}
+                  <CornerFiligree size={18} position="top-left" className="absolute top-2.5 left-2.5 text-red-900/35 pointer-events-none" />
+                  <CornerFiligree size={18} position="top-right" className="absolute top-2.5 right-2.5 text-red-900/35 pointer-events-none" />
+                  <CornerFiligree size={18} position="bottom-left" className="absolute bottom-2.5 left-2.5 text-red-900/35 pointer-events-none" />
+                  <CornerFiligree size={18} position="bottom-right" className="absolute bottom-2.5 right-2.5 text-red-900/35 pointer-events-none" />
+
+                  {/* Single Line Header: N Emblem (Left) | Coderland Visa Application (Center) | Date & Reg ID (Right) */}
+                  <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3 relative z-10">
+                    <div className="flex items-center gap-2">
+                      <ClubEmblem size={24} />
                     </div>
-                    <span className="font-mono text-xs text-red-400 font-bold">26–27 NOV</span>
+                    <div className="font-baroque text-lg sm:text-2xl text-zinc-100 font-bold tracking-wide text-center">
+                      Coderland Visa Application
+                    </div>
+                    <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
+                      26–27 NOV · CL-2026
+                    </div>
                   </div>
 
-                  <p className="text-zinc-400 text-xs font-mono mb-3 text-left">
+                  <p className="text-zinc-400 text-xs font-mono mb-3.5 text-left relative z-10">
                     Review and edit any parameter below before locking in your squad visa:
                   </p>
 
                   {/* Editable Identity Section */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-left relative z-40">
-                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800 relative z-30">
-                      <label className="text-[10px] font-mono text-red-400 uppercase font-bold block mb-1">
-                        Club Affiliation:
+                    <div className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-700/60 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500/30 transition-all relative z-30">
+                      <label className="text-xs sm:text-[13px] font-mono text-red-400 font-bold tracking-wider block mb-1.5">
+                        Club Affiliation
                       </label>
                       <input
                         type="text"
                         value={clubName}
                         onChange={(e) => setClubName(e.target.value)}
                         placeholder="Enter Club Name"
-                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none select-text cursor-text relative z-40"
+                        className="w-full px-3 py-2 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none placeholder:text-zinc-600 placeholder:text-[11px] select-text cursor-text relative z-40 transition-colors"
                       />
                     </div>
-                    <div className="p-2.5 rounded-lg bg-black/60 border border-zinc-800 relative z-30">
-                      <label className="text-[10px] font-mono text-red-400 uppercase font-bold block mb-1">
-                        Squad Moniker:
+                    <div className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-700/60 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500/30 transition-all relative z-30">
+                      <label className="text-xs sm:text-[13px] font-mono text-red-400 font-bold tracking-wider block mb-1.5">
+                        Squad Moniker
                       </label>
                       <input
                         type="text"
                         value={teamName}
                         onChange={(e) => setTeamName(e.target.value)}
                         placeholder="Enter Squad Moniker"
-                        className="w-full px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none select-text cursor-text relative z-40"
+                        className="w-full px-3 py-2 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none placeholder:text-zinc-600 placeholder:text-[11px] select-text cursor-text relative z-40 transition-colors"
                       />
                     </div>
                   </div>
 
                   {/* Editable 4 Members Section */}
-                  <div className="mb-4 text-left">
-                    <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-2 font-bold">
-                      Editable Squad Specialists:
+                  <div className="mb-4 text-left relative z-10">
+                    <div className="text-xs sm:text-[13px] font-mono text-red-400 uppercase tracking-wider mb-2.5 font-bold">
+                      Squad Specialists
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {members.map((m, idx) => (
                         <div
                           key={idx}
-                          className="p-2.5 rounded-lg bg-black/50 border border-red-900/30 flex flex-col justify-between"
+                          className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-800/60 transition-all flex flex-col justify-between"
                         >
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[10px] text-red-400 font-mono font-bold">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-mono font-bold text-amber-300 tracking-wide">
                               {m.domain}:
                             </span>
                             <button
                               type="button"
                               onClick={() => updateMember(idx, "isLeader", true)}
-                              className={`text-[9px] px-2 py-0.5 rounded font-mono font-bold transition-all cursor-pointer ${
+                              className={`text-[10px] px-2.5 py-1 rounded font-mono font-bold transition-all cursor-pointer ${
                                 m.isLeader
-                                  ? "bg-amber-500 text-stone-950 shadow"
-                                  : "bg-zinc-800 text-zinc-400 hover:text-white"
+                                  ? "bg-amber-500 text-stone-950 shadow font-black"
+                                  : "bg-zinc-800/80 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500"
                               }`}
                             >
                               {m.isLeader ? "★ LEADER" : "SET LEAD"}
@@ -1123,14 +1127,14 @@ export default function ContinuousScrollStage() {
                             value={m.name}
                             onChange={(e) => updateMember(idx, "name", e.target.value)}
                             placeholder={`Player #${idx + 1} Name`}
-                            className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-100 text-xs outline-none mb-1 font-mono"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-100 text-xs outline-none mb-1.5 font-mono placeholder:text-zinc-600 placeholder:text-[11px] transition-colors"
                           />
                           <input
                             type="email"
                             value={m.email}
                             onChange={(e) => updateMember(idx, "email", e.target.value)}
                             placeholder="student@abes.ac.in"
-                            className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-700 focus:border-red-500 text-zinc-300 text-[11px] outline-none font-mono"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-200 text-xs outline-none font-mono placeholder:text-zinc-600 placeholder:text-[11px] transition-colors"
                           />
                         </div>
                       ))}
@@ -1138,23 +1142,13 @@ export default function ContinuousScrollStage() {
                   </div>
 
                   {/* Submission Action */}
-                  <div className="pt-2">
+                  <div className="pt-2 relative z-10">
                     <button
                       disabled={isSubmitting}
                       onClick={handleSubmit}
-                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 text-white font-sheepman tracking-widest text-sm uppercase shadow-laser hover:scale-102 active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-sheepman tracking-[0.2em] text-sm uppercase shadow-laser active:scale-98 disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer"
                     >
-                      {isSubmitting ? (
-                        <>
-                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>SEALING VISA IN ARENA DATABASE...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 text-amber-300" />
-                          <span>CLAIM TEAM VISA & LOCK REGISTRATION</span>
-                        </>
-                      )}
+                      {isSubmitting ? "Locking Registration..." : "Lock Registration"}
                     </button>
                   </div>
                 </div>
@@ -1166,7 +1160,7 @@ export default function ContinuousScrollStage() {
                       <ClubEmblem size={28} />
                       <div>
                         <div className="font-techno text-[10px] text-red-800 font-bold uppercase tracking-widest">
-                          BORDERLAND VISA • CONFIRMED
+                          CODERLAND VISA • CONFIRMED
                         </div>
                         <div className="font-baroque text-2xl text-stone-900">
                           CoderLands Official Pass

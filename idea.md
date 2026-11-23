@@ -34,14 +34,14 @@ The registration platform is only **Phase 1** of a larger ecosystem. The databas
 ### Why Every Squad Gets a `Team ID` and `Passcode`
 When a squad completes registration, the engine generates two cryptographic credentials:
 - **`Team ID` (e.g. `CL-2026-A7F2`)**: Public tournament identifier displayed on live leaderboards, projector screens, and organizer attendance sheets.
-- **`Passcode` (e.g. `BORDER-9K2M`)**: Private authentication secret used by the squad to log into their terminal on tournament day in Seminar Hall 1.
+- **`Passcode` (e.g. `CODER-9K2M`)**: Private authentication secret used by the squad to log into their terminal on tournament day in Seminar Hall 1.
 
 ### Automatic Domain Mapping Schema
 In typical forms, members are listed in random order. In CoderLands, the database enforces a strict **Domain Map**:
 ```json
 {
   "id": "CL-2026-A7F2",
-  "passcode": "BORDER-9K2M",
+  "passcode": "CODER-9K2M",
   "clubName": "ACM Student Chapter",
   "teamName": "Binary Knights",
   "members": [
@@ -93,7 +93,7 @@ Every time a team registers, a normalized, quiz-optimized mapping file is synchr
 [
   {
     "teamId": "CL-2026-A7F2",
-    "passcode": "BORDER-9K2M",
+    "passcode": "CODER-9K2M",
     "teamName": "Binary Knights",
     "clubName": "ACM Student Chapter",
     "domains": {
@@ -105,7 +105,7 @@ Every time a team registers, a normalized, quiz-optimized mapping file is synchr
   }
 ]
 ```
-When Contenders log into the Round 1 Quiz Terminal using `BORDER-9K2M`:
+When Contenders log into the Round 1 Quiz Terminal using `CODER-9K2M`:
 - The quiz engine checks the `domainMap`.
 - `Alex Chen` only sees Web Development challenges.
 - `Maya Patel` only sees Cybersecurity challenges.

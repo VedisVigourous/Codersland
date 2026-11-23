@@ -12,7 +12,7 @@ export interface TeamMember {
 
 export interface TeamRegistration {
   id: string; // e.g. CL-2026-A7F2
-  passcode: string; // e.g. BORDER-9K2M
+  passcode: string; // e.g. CODER-9K2M
   clubName: string;
   teamName: string;
   members: TeamMember[];
@@ -228,7 +228,7 @@ function generatePasscode(): string {
   for (let i = 0; i < 4; i++) {
     random += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return `BORDER-${random}`;
+  return `CODER-${random}`;
 }
 
 // Public API Functions wrapped in Mutex
