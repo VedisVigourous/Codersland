@@ -61,6 +61,30 @@ export default function VisaPasscardView({
   const [isDownloading, setIsDownloading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Determine which domain specialist is the designated team leader
+  const getLeaderDomain = () => {
+    const leader = registeredTeam.members?.find((m) => m.isLeader) || registeredTeam.members?.[0];
+    if (!leader) return "web";
+    const dom = (leader.domain || "").toLowerCase();
+    if (dom.includes("web")) return "web";
+    if (dom.includes("cyber")) return "cyber";
+    if (dom.includes("cloud")) return "cloud";
+    if (dom.includes("network")) return "network";
+    if (leader.name) {
+      if (registeredTeam.domainMap?.webDev === leader.name) return "web";
+      if (registeredTeam.domainMap?.cybersecurity === leader.name) return "cyber";
+      if (registeredTeam.domainMap?.cloud === leader.name) return "cloud";
+      if (registeredTeam.domainMap?.networking === leader.name) return "network";
+    }
+    return "web";
+  };
+
+  const leaderDomain = getLeaderDomain();
+  const isWebLeader = leaderDomain === "web";
+  const isCyberLeader = leaderDomain === "cyber";
+  const isCloudLeader = leaderDomain === "cloud";
+  const isNetLeader = leaderDomain === "network";
+
   // Guarantee instant viewport reset so user sees the top of the card with zero vertical scrolling
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -77,12 +101,24 @@ export default function VisaPasscardView({
     try {
       await new Promise((resolve) => setTimeout(resolve, 80));
 
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 0.98,
-        pixelRatio: 2,
-        cacheBust: true,
-        skipFonts: true,
-      });
+      let dataUrl: string;
+      try {
+        dataUrl = await toPng(cardRef.current, {
+          quality: 0.98,
+          pixelRatio: 2.5,
+          cacheBust: true,
+          filter: (node) => !(node as HTMLElement)?.classList?.contains("hide-on-export"),
+        });
+      } catch (fontErr) {
+        console.warn("Font capture fallback:", fontErr);
+        dataUrl = await toPng(cardRef.current, {
+          quality: 0.98,
+          pixelRatio: 2.5,
+          cacheBust: true,
+          skipFonts: true,
+          filter: (node) => !(node as HTMLElement)?.classList?.contains("hide-on-export"),
+        });
+      }
 
       const filename = `CoderLands_Visa_${registeredTeam.id || "Pass"}.png`;
 
@@ -260,7 +296,7 @@ export default function VisaPasscardView({
             </div>
             <button
               onClick={copyCredentials}
-              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-300 transition-colors cursor-pointer hide-on-export"
               title="Copy credentials"
             >
               {copiedCode ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -269,37 +305,69 @@ export default function VisaPasscardView({
 
           {/* 4 Assigned Domain Squad Members */}
           <div className="grid grid-cols-2 gap-1.5 sm:gap-2 my-2.5 relative z-10 text-[10px]">
-            <div className="p-2 rounded-xl bg-amber-900/10 border border-stone-300/80">
-              <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
-                WEBDEV:
-              </span>
+            {/* WEBDEV */}
+            <div className={`p-2 rounded-xl bg-amber-900/10 border ${isWebLeader ? "border-amber-600/70 ring-1 ring-amber-500/30" : "border-stone-300/80"}`}>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
+                  WEBDEV:
+                </span>
+                {isWebLeader && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-amber-400 text-stone-950 font-mono font-black text-[7.5px] shadow-xs">
+                    ★ LEAD
+                  </span>
+                )}
+              </div>
               <span className="font-semibold text-stone-900 truncate block">
                 {registeredTeam.domainMap.webDev || "Assigned"}
               </span>
             </div>
 
-            <div className="p-2 rounded-xl bg-amber-900/10 border border-stone-300/80">
-              <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
-                CYBERSECURITY:
-              </span>
+            {/* CYBERSECURITY */}
+            <div className={`p-2 rounded-xl bg-amber-900/10 border ${isCyberLeader ? "border-amber-600/70 ring-1 ring-amber-500/30" : "border-stone-300/80"}`}>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
+                  CYBERSECURITY:
+                </span>
+                {isCyberLeader && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-amber-400 text-stone-950 font-mono font-black text-[7.5px] shadow-xs">
+                    ★ LEAD
+                  </span>
+                )}
+              </div>
               <span className="font-semibold text-stone-900 truncate block">
                 {registeredTeam.domainMap.cybersecurity || "Assigned"}
               </span>
             </div>
 
-            <div className="p-2 rounded-xl bg-amber-900/10 border border-stone-300/80">
-              <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
-                CLOUD:
-              </span>
+            {/* CLOUD */}
+            <div className={`p-2 rounded-xl bg-amber-900/10 border ${isCloudLeader ? "border-amber-600/70 ring-1 ring-amber-500/30" : "border-stone-300/80"}`}>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
+                  CLOUD:
+                </span>
+                {isCloudLeader && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-amber-400 text-stone-950 font-mono font-black text-[7.5px] shadow-xs">
+                    ★ LEAD
+                  </span>
+                )}
+              </div>
               <span className="font-semibold text-stone-900 truncate block">
                 {registeredTeam.domainMap.cloud || "Assigned"}
               </span>
             </div>
 
-            <div className="p-2 rounded-xl bg-amber-900/10 border border-stone-300/80">
-              <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
-                NETWORKING:
-              </span>
+            {/* NETWORKING */}
+            <div className={`p-2 rounded-xl bg-amber-900/10 border ${isNetLeader ? "border-amber-600/70 ring-1 ring-amber-500/30" : "border-stone-300/80"}`}>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="font-bold text-red-900 block font-mono text-[8px] tracking-wider">
+                  NETWORKING:
+                </span>
+                {isNetLeader && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-amber-400 text-stone-950 font-mono font-black text-[7.5px] shadow-xs">
+                    ★ LEAD
+                  </span>
+                )}
+              </div>
               <span className="font-semibold text-stone-900 truncate block">
                 {registeredTeam.domainMap.networking || "Assigned"}
               </span>
