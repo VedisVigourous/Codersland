@@ -78,8 +78,8 @@ export default function RoyalDirectCard({
     currentTranslateX = baseTranslateX * 1.25;
     currentTranslateY = baseTranslateY + 18;
     currentScale = baseScale * 0.91;
-    currentZIndex = 20;
-    currentOpacity = 0.5;
+    currentZIndex = 50;
+    currentOpacity = 0.65;
   }
 
   return (
@@ -98,7 +98,7 @@ export default function RoyalDirectCard({
         perspective: 1200,
         transformStyle: "preserve-3d",
       }}
-      className={`relative ${width} ${height} select-none cursor-pointer transition-shadow ${className}`}
+      className={`relative ${width} ${height} select-none cursor-pointer transition-shadow pointer-events-auto ${className}`}
     >
       {/* Front Face: Royal Playing Card with Direct Interactive Inputs */}
       <div

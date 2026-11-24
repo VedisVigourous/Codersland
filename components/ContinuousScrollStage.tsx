@@ -210,12 +210,14 @@ export default function ContinuousScrollStage() {
 
   const updateMember = (index: number, field: keyof MemberData, value: any) => {
     setMembers((prev) => {
-      const updated = [...prev];
       if (field === "isLeader" && value === true) {
-        updated.forEach((m, i) => {
-          m.isLeader = i === index;
-        });
-      } else if (field === "domain") {
+        return prev.map((m, i) => ({
+          ...m,
+          isLeader: i === index,
+        }));
+      }
+      const updated = prev.map((m) => ({ ...m }));
+      if (field === "domain") {
         const targetDomain = value as DomainType;
         const prevIdx = updated.findIndex((m, i) => i !== index && m.domain === targetDomain);
         if (prevIdx !== -1) {
@@ -608,13 +610,9 @@ export default function ContinuousScrollStage() {
                 x: identityClubX,
                 rotateZ: identityClubRotate,
                 scale: identityClubScale,
-                zIndex: focusedCardId === "club" ? 80 : (focusedCardId === "team" ? 20 : 35),
+                zIndex: focusedCardId === "club" ? 80 : (focusedCardId === "team" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("club");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="K"
@@ -626,7 +624,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("club")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "club" ? 80 : 35}
+                zIndex={focusedCardId === "club" ? 80 : (focusedCardId === "team" ? 50 : 30)}
                 footerText="CARD I // CLUB"
               >
                 <div className="space-y-2.5 text-left">
@@ -654,13 +652,9 @@ export default function ContinuousScrollStage() {
                 x: identityTeamX,
                 rotateZ: identityTeamRotate,
                 scale: identityTeamScale,
-                zIndex: focusedCardId === "team" ? 80 : (focusedCardId === "club" ? 20 : 30),
+                zIndex: focusedCardId === "team" ? 80 : (focusedCardId === "club" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("team");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="A"
@@ -672,7 +666,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("team")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "team" ? 80 : 30}
+                zIndex={focusedCardId === "team" ? 80 : (focusedCardId === "club" ? 50 : 30)}
                 footerText="CARD II // TEAM"
               >
                 <div className="space-y-2.5 text-left">
@@ -715,13 +709,9 @@ export default function ContinuousScrollStage() {
                 x: squadAlphaLeftX,
                 rotateZ: squadAlphaLeftRotate,
                 scale: squadAlphaLeftScale,
-                zIndex: focusedCardId === "m0" ? 80 : (focusedCardId === "m1" ? 20 : 35),
+                zIndex: focusedCardId === "m0" ? 80 : (focusedCardId === "m1" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("m0");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="I"
@@ -733,7 +723,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m0")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "m0" ? 80 : 35}
+                zIndex={focusedCardId === "m0" ? 80 : (focusedCardId === "m1" ? 50 : 30)}
                 footerText="15 QUESTIONS // REALM 1"
               >
                 <div className="space-y-2 text-left">
@@ -766,7 +756,8 @@ export default function ContinuousScrollStage() {
                   <div className="pt-0.5">
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(0, "isLeader", true);
                         setFocusedCardId("m0");
@@ -790,13 +781,9 @@ export default function ContinuousScrollStage() {
                 x: squadAlphaRightX,
                 rotateZ: squadAlphaRightRotate,
                 scale: squadAlphaRightScale,
-                zIndex: focusedCardId === "m1" ? 80 : (focusedCardId === "m0" ? 20 : 30),
+                zIndex: focusedCardId === "m1" ? 80 : (focusedCardId === "m0" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("m1");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="II"
@@ -808,7 +795,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m1")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "m1" ? 80 : 30}
+                zIndex={focusedCardId === "m1" ? 80 : (focusedCardId === "m0" ? 50 : 30)}
                 footerText="15 QUESTIONS // REALM 2"
               >
                 <div className="space-y-2 text-left">
@@ -841,7 +828,8 @@ export default function ContinuousScrollStage() {
                   <div className="pt-0.5">
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(1, "isLeader", true);
                         setFocusedCardId("m1");
@@ -880,13 +868,9 @@ export default function ContinuousScrollStage() {
                 x: squadBravoLeftX,
                 rotateZ: squadBravoLeftRotate,
                 scale: squadBravoLeftScale,
-                zIndex: focusedCardId === "m2" ? 80 : (focusedCardId === "m3" ? 20 : 35),
+                zIndex: focusedCardId === "m2" ? 80 : (focusedCardId === "m3" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("m2");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="III"
@@ -898,7 +882,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m2")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "m2" ? 80 : 35}
+                zIndex={focusedCardId === "m2" ? 80 : (focusedCardId === "m3" ? 50 : 30)}
                 footerText="15 QUESTIONS // REALM 3"
               >
                 <div className="space-y-2 text-left">
@@ -931,7 +915,8 @@ export default function ContinuousScrollStage() {
                   <div className="pt-0.5">
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(2, "isLeader", true);
                         setFocusedCardId("m2");
@@ -955,13 +940,9 @@ export default function ContinuousScrollStage() {
                 x: squadBravoRightX,
                 rotateZ: squadBravoRightRotate,
                 scale: squadBravoRightScale,
-                zIndex: focusedCardId === "m3" ? 80 : (focusedCardId === "m2" ? 20 : 30),
+                zIndex: focusedCardId === "m3" ? 80 : (focusedCardId === "m2" ? 50 : 30),
               }}
-              onClick={() => {
-                sounds.playCardClick();
-                setFocusedCardId("m3");
-              }}
-              className="absolute pointer-events-auto"
+              className="absolute pointer-events-none"
             >
               <RoyalDirectCard
                 rank="IV"
@@ -973,7 +954,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m3")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "m3" ? 80 : 30}
+                zIndex={focusedCardId === "m3" ? 80 : (focusedCardId === "m2" ? 50 : 30)}
                 footerText="15 QUESTIONS // REALM 4"
               >
                 <div className="space-y-2 text-left">
@@ -1006,7 +987,8 @@ export default function ContinuousScrollStage() {
                   <div className="pt-0.5">
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(3, "isLeader", true);
                         setFocusedCardId("m3");
@@ -1036,7 +1018,7 @@ export default function ContinuousScrollStage() {
               scale: dossierScale,
               y: dossierY,
             }}
-            className={`absolute inset-0 flex items-center justify-center z-40 ${
+            className={`absolute inset-0 flex items-center justify-center z-50 ${
               activeChapter === 5 ? "pointer-events-auto" : "pointer-events-none opacity-0"
             }`}
           >
