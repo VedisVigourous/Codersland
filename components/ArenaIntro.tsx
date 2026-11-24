@@ -1,24 +1,33 @@
 import { CalendarDays, MapPin, UsersRound } from "lucide-react";
 
-export default function ArenaIntro({ onRegister, onBriefing }: { onRegister: () => void; onBriefing: () => void }) {
+export default function ArenaIntro({
+  onRegister,
+  onAlreadyRegistered,
+  onBriefing,
+}: {
+  onRegister: () => void;
+  onAlreadyRegistered?: () => void;
+  onBriefing?: () => void;
+}) {
+  const handleAlreadyRegistered = onAlreadyRegistered || onBriefing;
   return (
     <div className="arena-intro">
       <div className="arena-intro-copy">
         <p className="arena-kicker">Interclub technical competition</p>
-        <h1 className="font-baroque">CoderLands</h1>
+        <h1 className="font-baroque">Coderslands</h1>
         <div className="arena-suits" aria-hidden="true">
           <span>♠︎</span>
           <span>♦︎</span>
           <span>♣︎</span>
           <span>♥︎</span>
-        </div>
+          </div>
         <p className="arena-hook">How far can you go?</p>
         <p className="arena-description">
           Four specialists. Two rounds. Make your next move count.
         </p>
         <div className="arena-intro-actions">
           <button type="button" className="arena-action" onClick={onRegister}>Start registration</button>
-          <button type="button" className="arena-text-action" onClick={onBriefing}>Event briefing</button>
+          <button type="button" className="arena-text-action" onClick={handleAlreadyRegistered}>Already Registered</button>
         </div>
       </div>
       <ul className="arena-event-facts">

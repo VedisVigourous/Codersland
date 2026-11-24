@@ -128,9 +128,8 @@ export default function MobileScrollStage({
           {/* Top Row: Corner Indices & Top-Right Filigree */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">K</span>
-              <span className="text-sm font-bold text-red-700">♥</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">K</span>
+              <span className="text-base font-bold text-red-700">♥</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -164,15 +163,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                CARD I // CLUB
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">K</span>
-              <span className="text-sm font-bold text-red-700">♥</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">K</span>
+              <span className="text-base font-bold text-red-700">♥</span>
             </div>
           </div>
         </motion.div>
@@ -204,9 +199,8 @@ export default function MobileScrollStage({
           {/* Top Row */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">A</span>
-              <span className="text-sm font-bold text-stone-900">♠</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">A</span>
+              <span className="text-base font-bold text-stone-900">♠</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -222,17 +216,17 @@ export default function MobileScrollStage({
 
             <div className="space-y-2.5 text-left">
               <label className="text-[10px] font-mono uppercase font-bold text-stone-800 block">
-                Choose Squad Moniker:
+                Choose Squad Name:
               </label>
               <input
                 type="text"
-                placeholder="e.g. Royal Flush, Binary Knights"
+                placeholder="Enter Squad Name"
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-sm outline-none"
               />
               <p className="text-[10px] text-stone-600 font-body bg-amber-900/10 p-2.5 rounded leading-tight">
-                This moniker will be displayed on tournament leaderboards and credentials during live arena rounds.
+                This squad name will be displayed on tournament leaderboards and credentials during live arena rounds.
               </p>
             </div>
           </div>
@@ -240,15 +234,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                CARD II // TEAM
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">A</span>
-              <span className="text-sm font-bold text-stone-900">♠</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">A</span>
+              <span className="text-base font-bold text-stone-900">♠</span>
             </div>
           </div>
         </motion.div>
@@ -280,9 +270,8 @@ export default function MobileScrollStage({
           {/* Top Row */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">I</span>
-              <span className="text-sm font-bold text-stone-900">♠</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">I</span>
+              <span className="text-base font-bold text-stone-900">♠</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -345,15 +334,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                15 QUESTIONS // REALM 1
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">I</span>
-              <span className="text-sm font-bold text-stone-900">♠</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">I</span>
+              <span className="text-base font-bold text-stone-900">♠</span>
             </div>
           </div>
         </motion.div>
@@ -385,9 +370,8 @@ export default function MobileScrollStage({
           {/* Top Row */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">II</span>
-              <span className="text-sm font-bold text-stone-900">♣</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">II</span>
+              <span className="text-base font-bold text-stone-900">♣</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -450,15 +434,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                15 QUESTIONS // REALM 2
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-stone-900 mt-1">II</span>
-              <span className="text-sm font-bold text-stone-900">♣</span>
+              <span className="font-sheepman text-2xl font-black text-stone-900">II</span>
+              <span className="text-base font-bold text-stone-900">♣</span>
             </div>
           </div>
         </motion.div>
@@ -490,9 +470,8 @@ export default function MobileScrollStage({
           {/* Top Row */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">III</span>
-              <span className="text-sm font-bold text-red-700">♦</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">III</span>
+              <span className="text-base font-bold text-red-700">♦</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -555,15 +534,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                15 QUESTIONS // REALM 3
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">III</span>
-              <span className="text-sm font-bold text-red-700">♦</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">III</span>
+              <span className="text-base font-bold text-red-700">♦</span>
             </div>
           </div>
         </motion.div>
@@ -595,9 +570,8 @@ export default function MobileScrollStage({
           {/* Top Row */}
           <div className="flex items-start justify-between relative z-20 pointer-events-none">
             <div className="flex flex-col items-center leading-none">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">IV</span>
-              <span className="text-sm font-bold text-red-700">♥</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">IV</span>
+              <span className="text-base font-bold text-red-700">♥</span>
             </div>
             <CornerFiligree size={34} position="top-right" />
           </div>
@@ -660,15 +634,11 @@ export default function MobileScrollStage({
           {/* Bottom Row */}
           <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
             <div className="flex flex-col items-start">
-              <CornerFiligree size={28} position="bottom-left" />
-              <span className="font-mono text-[9px] text-stone-600 mt-1 uppercase font-semibold">
-                15 QUESTIONS // REALM 4
-              </span>
+              <CornerFiligree size={30} position="bottom-left" />
             </div>
             <div className="flex flex-col items-center leading-none rotate-180">
-              <ClubEmblem size={20} />
-              <span className="font-sheepman text-xl font-black text-red-700 mt-1">IV</span>
-              <span className="text-sm font-bold text-red-700">♥</span>
+              <span className="font-sheepman text-2xl font-black text-red-700">IV</span>
+              <span className="text-base font-bold text-red-700">♥</span>
             </div>
           </div>
         </motion.div>
@@ -696,13 +666,12 @@ export default function MobileScrollStage({
               transition={{ duration: 0.4 }}
               className="arena-dossier rounded-2xl p-5 sm:p-6 bg-[#0d090d]/95 backdrop-blur-xl border-2 border-red-900/60 shadow-[0_0_50px_rgba(255,17,58,0.25),0_25px_60px_rgba(0,0,0,0.95)] relative overflow-hidden"
             >
-              {/* Single Line Header: N Emblem (Left) | Coderland Visa Application (Center) | Date & Reg ID (Right) */}
-              {/* Single Line Header: [N] Coderland Visa Application (Left) | Date (Right) */}
+              {/* Single Line Header: Logo (Left) | Codersland Visa Application (Center) | Date (Right) */}
               <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3 relative z-10">
                 <div className="flex items-center gap-2">
                   <ClubEmblem size={22} />
                   <span className="font-baroque text-base sm:text-lg text-zinc-100 font-bold tracking-wide">
-                    Coderland Visa Application
+                    Codersland Visa Application
                   </span>
                 </div>
                 <div className="text-right font-mono text-[11px] text-red-400 font-bold tracking-wider">
@@ -731,13 +700,13 @@ export default function MobileScrollStage({
 
                 <div className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-700/60 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500/30 transition-all relative z-30">
                   <label className="text-xs sm:text-[13px] font-mono text-red-400 font-bold tracking-wider block mb-1.5">
-                    Squad Moniker
+                    Squad Name
                   </label>
                   <input
                     type="text"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
-                    placeholder="Enter Squad Moniker"
+                    placeholder="Enter Squad Name"
                     className="w-full px-3 py-2 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none placeholder:text-zinc-600 placeholder:text-[11px] select-text cursor-text relative z-40 transition-colors"
                   />
                 </div>
@@ -810,10 +779,10 @@ export default function MobileScrollStage({
                   <ClubEmblem size={24} />
                   <div>
                     <div className="font-techno text-[9px] text-red-800 font-bold uppercase tracking-widest">
-                      CODERLAND VISA • CONFIRMED
+                      CODERSLAND VISA • CONFIRMED
                     </div>
                     <div className="font-baroque text-xl text-stone-900">
-                      CoderLands Official Pass
+                      Coderslands Official Pass
                     </div>
                   </div>
                 </div>

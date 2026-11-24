@@ -65,12 +65,12 @@ export default function RoyalDirectCard({
   let currentOpacity = 1;
 
   if (isFocused) {
-    // Pan & zoom straight to front center, enlarged and upright!
+    // Pan & zoom straight to front center, completely straight and upright like a modal window
     currentRotate = 0;
     currentTranslateX = 0;
-    currentTranslateY = -22;
+    currentTranslateY = 0;
     currentScale = baseScale * 1.15;
-    currentZIndex = 85;
+    currentZIndex = 100;
     currentOpacity = 1;
   } else if (isSiblingFocused) {
     // Sibling recedes back slightly when the other card is focused
@@ -95,8 +95,8 @@ export default function RoyalDirectCard({
       }}
       transition={{ type: "spring", stiffness: 380, damping: 28 }}
       style={{
-        perspective: 1200,
-        transformStyle: "preserve-3d",
+        perspective: isFocused ? "none" : 1200,
+        transformStyle: isFocused ? "flat" : "preserve-3d",
       }}
       className={`relative ${width} ${height} select-none cursor-pointer transition-shadow pointer-events-auto ${className}`}
     >
@@ -104,7 +104,7 @@ export default function RoyalDirectCard({
       <div
         className={`w-full h-full rounded-2xl p-5 sm:p-6 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl transition-all ${
           isFocused
-            ? "ring-2 ring-red-700/90 shadow-2xl"
+            ? "ring-2 ring-red-600 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(255,17,58,0.35)]"
             : isSiblingFocused
             ? "shadow-lg opacity-60"
             : ""
@@ -112,13 +112,12 @@ export default function RoyalDirectCard({
       >
         {/* Top Row: Corner Indices & Top-Right Filigree */}
         <div className="flex items-start justify-between relative z-20 pointer-events-none">
-          {/* Top-Left Corner: Stylized 'N' + Rank */}
+          {/* Top-Left Corner: Rank + Suit Symbols only (no N) */}
           <div className="flex flex-col items-center leading-none">
-            <ClubEmblem size={22} />
-            <span className="font-sheepman text-2xl font-black text-red-700 mt-1">
+            <span className="font-sheepman text-3xl font-black text-red-700">
               {rank}
             </span>
-            <span className={`text-base font-bold ${isRed ? "text-red-700" : "text-stone-900"}`}>
+            <span className={`text-xl font-bold ${isRed ? "text-red-700" : "text-stone-900"} -mt-0.5`}>
               {suit}
             </span>
           </div>
@@ -155,23 +154,17 @@ export default function RoyalDirectCard({
           )}
         </div>
 
-        {/* Bottom Row: Bottom-Left Filigree & Bottom-Right Inverted Corner */}
+        {/* Bottom Row: Bottom-Left Filigree & Bottom-Right Inverted Corner (No bottom text) */}
         <div className="flex items-end justify-between border-t border-amber-900/25 pt-2 relative z-20 pointer-events-none">
-          <div className="flex flex-col items-start">
-            <CornerFiligree size={32} position="bottom-left" />
-            {footerText && (
-              <span className="font-mono text-[10px] text-stone-600 mt-1 uppercase font-semibold">
-                {footerText}
-              </span>
-            )}
+          <div className="flex items-start">
+            <CornerFiligree size={34} position="bottom-left" />
           </div>
 
           <div className="flex flex-col items-center leading-none rotate-180">
-            <ClubEmblem size={22} />
-            <span className="font-sheepman text-2xl font-black text-red-700 mt-1">
+            <span className="font-sheepman text-3xl font-black text-red-700">
               {rank}
             </span>
-            <span className={`text-base font-bold ${isRed ? "text-red-700" : "text-stone-900"}`}>
+            <span className={`text-xl font-bold ${isRed ? "text-red-700" : "text-stone-900"} -mt-0.5`}>
               {suit}
             </span>
           </div>

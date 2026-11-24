@@ -3,15 +3,15 @@ import "./globals.css";
 import LenisScroll from "@/components/LenisScroll";
 
 export const metadata: Metadata = {
-  title: "CoderLands • Technovation Inter-Club Registration",
-  description: "Official registration arena for CoderLands: Alice in Borderland themed inter-club technical tournament. WebDev, Cybersecurity, Cloud Computing, Networking.",
+  title: "Coderslands • Technovation Inter-Club Registration",
+  description: "Official registration arena for Coderslands: Alice in Borderland themed inter-club technical tournament. WebDev, Cybersecurity, Cloud Computing, Networking.",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/logo.webp", type: "image/webp" },
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    shortcut: "/logo.webp",
+    apple: "/logo.webp",
   },
 };
 

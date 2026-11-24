@@ -77,22 +77,30 @@ export default function ContinuousScrollStage() {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // As soon as user starts scrolling again, smoothly return card to its space
-    setFocusedCardId(null);
+    let newChapter = 0;
+    if (latest < 0.12) newChapter = 0;
+    else if (latest < 0.30) newChapter = 1;
+    else if (latest < 0.50) newChapter = 2;
+    else if (latest < 0.70) newChapter = 3;
+    else if (latest < 0.88) newChapter = 4;
+    else newChapter = 5;
 
-    if (latest < 0.12) setActiveChapter(0);
-    else if (latest < 0.30) setActiveChapter(1);
-    else if (latest < 0.50) setActiveChapter(2);
-    else if (latest < 0.70) setActiveChapter(3);
-    else if (latest < 0.88) setActiveChapter(4);
-    else setActiveChapter(5);
+    if (newChapter !== activeChapter) {
+      setActiveChapter(newChapter);
+      setFocusedCardId(null);
+    }
   });
 
   useEffect(() => {
     containerRef.current?.querySelectorAll<HTMLElement>("[data-arena-chapter]").forEach((stage) => {
-      stage.inert = Number(stage.dataset.arenaChapter) !== activeChapter;
+      const chapterNum = Number(stage.dataset.arenaChapter);
+      const isFocusedChapter =
+        (chapterNum === 2 && (focusedCardId === "club" || focusedCardId === "team")) ||
+        (chapterNum === 3 && (focusedCardId === "m0" || focusedCardId === "m1")) ||
+        (chapterNum === 4 && (focusedCardId === "m2" || focusedCardId === "m3"));
+      stage.inert = !isFocusedChapter && chapterNum !== activeChapter;
     });
-  }, [activeChapter, registeredTeam]);
+  }, [activeChapter, focusedCardId, registeredTeam]);
 
   useEffect(() => {
     sounds.setEnabled(true);
@@ -378,7 +386,7 @@ export default function ContinuousScrollStage() {
 
   const copyCredentials = () => {
     if (!registeredTeam) return;
-    const text = `CODERLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
+    const text = `CODERSLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
     navigator.clipboard.writeText(text);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 3000);
@@ -489,6 +497,7 @@ export default function ContinuousScrollStage() {
           >
             <ArenaIntro
               onRegister={() => scrollToChapter(CHAPTERS[2].scrollTarget)}
+              onAlreadyRegistered={() => scrollToChapter(CHAPTERS[5].scrollTarget)}
               onBriefing={() => scrollToChapter(CHAPTERS[1].scrollTarget)}
             />
           </motion.div>
@@ -601,16 +610,18 @@ export default function ContinuousScrollStage() {
               y: identityInY,
             }}
             className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 2 ? "pointer-events-auto" : "pointer-events-none"
+              activeChapter === 2 || focusedCardId === "club" || focusedCardId === "team"
+                ? "pointer-events-auto"
+                : "pointer-events-none"
             }`}
           >
             {/* Left Card: CLUB NAME */}
             <motion.div
               style={{
-                x: identityClubX,
-                rotateZ: identityClubRotate,
-                scale: identityClubScale,
-                zIndex: focusedCardId === "club" ? 80 : (focusedCardId === "team" ? 50 : 30),
+                x: focusedCardId === "club" ? 0 : identityClubX,
+                rotateZ: focusedCardId === "club" ? 0 : identityClubRotate,
+                scale: focusedCardId === "club" ? 1 : identityClubScale,
+                zIndex: focusedCardId === "club" ? 100 : (focusedCardId === "team" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -624,8 +635,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("club")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "club" ? 80 : (focusedCardId === "team" ? 50 : 30)}
-                footerText="CARD I // CLUB"
+                zIndex={focusedCardId === "club" ? 100 : (focusedCardId === "team" ? 50 : 30)}
               >
                 <div className="space-y-2.5 text-left">
                   <label className="text-[10px] font-mono uppercase font-bold text-stone-800 block">
@@ -649,10 +659,10 @@ export default function ContinuousScrollStage() {
             {/* Right Card: TEAM NAME */}
             <motion.div
               style={{
-                x: identityTeamX,
-                rotateZ: identityTeamRotate,
-                scale: identityTeamScale,
-                zIndex: focusedCardId === "team" ? 80 : (focusedCardId === "club" ? 50 : 30),
+                x: focusedCardId === "team" ? 0 : identityTeamX,
+                rotateZ: focusedCardId === "team" ? 0 : identityTeamRotate,
+                scale: focusedCardId === "team" ? 1 : identityTeamScale,
+                zIndex: focusedCardId === "team" ? 100 : (focusedCardId === "club" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -666,23 +676,22 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("team")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "team" ? 80 : (focusedCardId === "club" ? 50 : 30)}
-                footerText="CARD II // TEAM"
+                zIndex={focusedCardId === "team" ? 100 : (focusedCardId === "club" ? 50 : 30)}
               >
                 <div className="space-y-2.5 text-left">
                   <label className="text-[10px] font-mono uppercase font-bold text-stone-800 block">
-                    Choose Squad Moniker:
+                    Choose Squad Name:
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Royal Flush, Binary Knights"
+                    placeholder="Enter Squad Name"
                     value={teamName}
                     onFocus={() => setFocusedCardId("team")}
                     onChange={(e) => setTeamName(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-xs sm:text-sm outline-none"
                   />
                   <p className="text-[10px] text-stone-600 font-body bg-amber-900/10 p-2 rounded leading-tight">
-                    This moniker will be displayed on tournament leaderboards and credentials during live arena rounds.
+                    This squad name will be displayed on tournament leaderboards and credentials during live arena rounds.
                   </p>
                 </div>
               </RoyalDirectCard>
@@ -700,16 +709,18 @@ export default function ContinuousScrollStage() {
               y: squadAlphaInY,
             }}
             className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 3 ? "pointer-events-auto" : "pointer-events-none"
+              activeChapter === 3 || focusedCardId === "m0" || focusedCardId === "m1"
+                ? "pointer-events-auto"
+                : "pointer-events-none"
             }`}
           >
             {/* Player 1: Web Development ♠ */}
             <motion.div
               style={{
-                x: squadAlphaLeftX,
-                rotateZ: squadAlphaLeftRotate,
-                scale: squadAlphaLeftScale,
-                zIndex: focusedCardId === "m0" ? 80 : (focusedCardId === "m1" ? 50 : 30),
+                x: focusedCardId === "m0" ? 0 : squadAlphaLeftX,
+                rotateZ: focusedCardId === "m0" ? 0 : squadAlphaLeftRotate,
+                scale: focusedCardId === "m0" ? 1 : squadAlphaLeftScale,
+                zIndex: focusedCardId === "m0" ? 100 : (focusedCardId === "m1" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -723,8 +734,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m0")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "m0" ? 80 : (focusedCardId === "m1" ? 50 : 30)}
-                footerText="15 QUESTIONS // REALM 1"
+                zIndex={focusedCardId === "m0" ? 100 : (focusedCardId === "m1" ? 50 : 30)}
               >
                 <div className="space-y-2 text-left">
                   <div>
@@ -778,10 +788,10 @@ export default function ContinuousScrollStage() {
             {/* Player 2: Cybersecurity ♣ */}
             <motion.div
               style={{
-                x: squadAlphaRightX,
-                rotateZ: squadAlphaRightRotate,
-                scale: squadAlphaRightScale,
-                zIndex: focusedCardId === "m1" ? 80 : (focusedCardId === "m0" ? 50 : 30),
+                x: focusedCardId === "m1" ? 0 : squadAlphaRightX,
+                rotateZ: focusedCardId === "m1" ? 0 : squadAlphaRightRotate,
+                scale: focusedCardId === "m1" ? 1 : squadAlphaRightScale,
+                zIndex: focusedCardId === "m1" ? 100 : (focusedCardId === "m0" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -795,8 +805,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m1")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "m1" ? 80 : (focusedCardId === "m0" ? 50 : 30)}
-                footerText="15 QUESTIONS // REALM 2"
+                zIndex={focusedCardId === "m1" ? 100 : (focusedCardId === "m0" ? 50 : 30)}
               >
                 <div className="space-y-2 text-left">
                   <div>
@@ -859,16 +868,18 @@ export default function ContinuousScrollStage() {
               y: squadBravoInY,
             }}
             className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 4 ? "pointer-events-auto" : "pointer-events-none"
+              activeChapter === 4 || focusedCardId === "m2" || focusedCardId === "m3"
+                ? "pointer-events-auto"
+                : "pointer-events-none"
             }`}
           >
             {/* Player 3: Cloud Computing ♦ */}
             <motion.div
               style={{
-                x: squadBravoLeftX,
-                rotateZ: squadBravoLeftRotate,
-                scale: squadBravoLeftScale,
-                zIndex: focusedCardId === "m2" ? 80 : (focusedCardId === "m3" ? 50 : 30),
+                x: focusedCardId === "m2" ? 0 : squadBravoLeftX,
+                rotateZ: focusedCardId === "m2" ? 0 : squadBravoLeftRotate,
+                scale: focusedCardId === "m2" ? 1 : squadBravoLeftScale,
+                zIndex: focusedCardId === "m2" ? 100 : (focusedCardId === "m3" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -882,8 +893,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m2")}
                 baseRotate={-6}
                 baseTranslateX={-156}
-                zIndex={focusedCardId === "m2" ? 80 : (focusedCardId === "m3" ? 50 : 30)}
-                footerText="15 QUESTIONS // REALM 3"
+                zIndex={focusedCardId === "m2" ? 100 : (focusedCardId === "m3" ? 50 : 30)}
               >
                 <div className="space-y-2 text-left">
                   <div>
@@ -937,10 +947,10 @@ export default function ContinuousScrollStage() {
             {/* Player 4: Networking ♥ */}
             <motion.div
               style={{
-                x: squadBravoRightX,
-                rotateZ: squadBravoRightRotate,
+                x: focusedCardId === "m3" ? 0 : squadBravoRightX,
+                rotateZ: focusedCardId === "m3" ? 0 : squadBravoRightRotate,
                 scale: squadBravoRightScale,
-                zIndex: focusedCardId === "m3" ? 80 : (focusedCardId === "m2" ? 50 : 30),
+                zIndex: focusedCardId === "m3" ? 100 : (focusedCardId === "m2" ? 50 : 30),
               }}
               className="absolute pointer-events-none"
             >
@@ -954,8 +964,7 @@ export default function ContinuousScrollStage() {
                 onFocusCard={() => setFocusedCardId("m3")}
                 baseRotate={6}
                 baseTranslateX={156}
-                zIndex={focusedCardId === "m3" ? 80 : (focusedCardId === "m2" ? 50 : 30)}
-                footerText="15 QUESTIONS // REALM 4"
+                zIndex={focusedCardId === "m3" ? 100 : (focusedCardId === "m2" ? 50 : 30)}
               >
                 <div className="space-y-2 text-left">
                   <div>
@@ -1032,12 +1041,12 @@ export default function ContinuousScrollStage() {
                   <CornerFiligree size={18} position="bottom-left" className="absolute bottom-2.5 left-2.5 text-red-900/35 pointer-events-none" />
                   <CornerFiligree size={18} position="bottom-right" className="absolute bottom-2.5 right-2.5 text-red-900/35 pointer-events-none" />
 
-                  {/* Single Line Header: [N] Coderland Visa Application (Left) | Date & Reg ID (Right) */}
+                  {/* Single Line Header: [Logo] Codersland Visa Application (Left) | Date & Reg ID (Right) */}
                   <div className="flex items-center justify-between border-b border-red-900/40 pb-3 mb-3 relative z-10">
                     <div className="flex items-center gap-2.5">
                       <ClubEmblem size={24} />
                       <span className="font-baroque text-lg sm:text-2xl text-zinc-100 font-bold tracking-wide">
-                        Coderland Visa Application
+                        Codersland Visa Application
                       </span>
                     </div>
                     <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
@@ -1065,13 +1074,13 @@ export default function ContinuousScrollStage() {
                     </div>
                     <div className="p-3 rounded-xl bg-black/60 border border-red-900/40 hover:border-red-700/60 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500/30 transition-all relative z-30">
                       <label className="text-xs sm:text-[13px] font-mono text-red-400 font-bold tracking-wider block mb-1.5">
-                        Squad Moniker
+                        Squad Name
                       </label>
                       <input
                         type="text"
                         value={teamName}
                         onChange={(e) => setTeamName(e.target.value)}
-                        placeholder="Enter Squad Moniker"
+                        placeholder="Enter Squad Name"
                         className="w-full px-3 py-2 rounded-lg bg-zinc-950/80 border border-zinc-800 focus:border-red-500 text-zinc-100 text-xs font-mono outline-none placeholder:text-zinc-600 placeholder:text-[11px] select-text cursor-text relative z-40 transition-colors"
                       />
                     </div>
@@ -1142,10 +1151,10 @@ export default function ContinuousScrollStage() {
                       <ClubEmblem size={28} />
                       <div>
                         <div className="font-techno text-[10px] text-red-800 font-bold uppercase tracking-widest">
-                          CODERLAND VISA • CONFIRMED
+                          CODERSLAND VISA • CONFIRMED
                         </div>
                         <div className="font-baroque text-2xl text-stone-900">
-                          CoderLands Official Pass
+                          Coderslands Official Pass
                         </div>
                       </div>
                     </div>
