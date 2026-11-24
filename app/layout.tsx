@@ -7,11 +7,12 @@ export const metadata: Metadata = {
   description: "Official registration arena for Coderlands: Alice in Borderland themed inter-club technical tournament. WebDev, Cybersecurity, Cloud Computing, Networking.",
   icons: {
     icon: [
-      { url: "/favicon.webp", type: "image/webp" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.png", type: "image/png" },
     ],
-    shortcut: "/favicon.webp",
-    apple: "/favicon.webp",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
@@ -23,6 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
