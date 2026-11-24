@@ -92,17 +92,6 @@ export default function ContinuousScrollStage() {
   });
 
   useEffect(() => {
-    containerRef.current?.querySelectorAll<HTMLElement>("[data-arena-chapter]").forEach((stage) => {
-      const chapterNum = Number(stage.dataset.arenaChapter);
-      const isFocusedChapter =
-        (chapterNum === 2 && (focusedCardId === "club" || focusedCardId === "team")) ||
-        (chapterNum === 3 && (focusedCardId === "m0" || focusedCardId === "m1")) ||
-        (chapterNum === 4 && (focusedCardId === "m2" || focusedCardId === "m3"));
-      stage.inert = !isFocusedChapter && chapterNum !== activeChapter;
-    });
-  }, [activeChapter, focusedCardId, registeredTeam]);
-
-  useEffect(() => {
     sounds.setEnabled(true);
 
     const audio = document.createElement("audio");
@@ -172,27 +161,17 @@ export default function ContinuousScrollStage() {
     };
   }, []);
 
-  // Escape key & wheel/scroll dismiss: as soon as user starts scrolling, card moves back to its space
+  // Escape key dismisses focused card
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setFocusedCardId(null);
       }
     };
-    const handleScrollDismiss = () => {
-      setFocusedCardId((prev) => (prev ? null : null));
-    };
 
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("scroll", handleScrollDismiss, { passive: true });
-    window.addEventListener("wheel", handleScrollDismiss, { passive: true });
-    window.addEventListener("touchmove", handleScrollDismiss, { passive: true });
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("scroll", handleScrollDismiss);
-      window.removeEventListener("wheel", handleScrollDismiss);
-      window.removeEventListener("touchmove", handleScrollDismiss);
     };
   }, []);
 
@@ -246,6 +225,13 @@ export default function ContinuousScrollStage() {
       top: totalHeight * targetProgress,
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
     });
+  };
+
+  const handleFocusCard = (cardId: string, chapterIdx: number) => {
+    sounds.playCardClick();
+    setFocusedCardId(cardId);
+    setActiveChapter(chapterIdx);
+    scrollToChapter(CHAPTERS[chapterIdx].scrollTarget);
   };
 
   // =========================================================================
@@ -386,7 +372,7 @@ export default function ContinuousScrollStage() {
 
   const copyCredentials = () => {
     if (!registeredTeam) return;
-    const text = `CODERSLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
+    const text = `CODERLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
     navigator.clipboard.writeText(text);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 3000);
@@ -523,9 +509,7 @@ export default function ContinuousScrollStage() {
               scale: briefingEnterScale,
               opacity: briefingEnterOpacity,
             }}
-            className={`absolute inset-0 flex items-center justify-center transition-all ${
-              activeChapter !== 1 ? "pointer-events-none" : ""
-            }`}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
             {/* Left Card: Round 1 FOURFOLD */}
             <motion.div
@@ -535,7 +519,7 @@ export default function ContinuousScrollStage() {
                 scale: briefingLeftScale,
                 zIndex: 15,
               }}
-              className="absolute pointer-events-auto"
+              className={`absolute ${activeChapter === 1 ? "pointer-events-auto" : "pointer-events-none"}`}
             >
               <RoyalDirectCard
                 rank="A"
@@ -559,7 +543,7 @@ export default function ContinuousScrollStage() {
                 opacity: briefingCenterOpacity,
                 zIndex: 35,
               }}
-              className="absolute pointer-events-auto"
+              className={`absolute ${activeChapter === 1 ? "pointer-events-auto" : "pointer-events-none"}`}
             >
               <RoyalDirectCard
                 rank="A"
@@ -582,7 +566,7 @@ export default function ContinuousScrollStage() {
                 scale: briefingRightScale,
                 zIndex: 15,
               }}
-              className="absolute pointer-events-auto"
+              className={`absolute ${activeChapter === 1 ? "pointer-events-auto" : "pointer-events-none"}`}
             >
               <RoyalDirectCard
                 rank="A"
@@ -609,11 +593,7 @@ export default function ContinuousScrollStage() {
               opacity: identityOpacity,
               y: identityInY,
             }}
-            className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 2 || focusedCardId === "club" || focusedCardId === "team"
-                ? "pointer-events-auto"
-                : "pointer-events-none"
-            }`}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
             {/* Left Card: CLUB NAME */}
             <motion.div
@@ -623,7 +603,7 @@ export default function ContinuousScrollStage() {
                 scale: focusedCardId === "club" ? 1 : identityClubScale,
                 zIndex: focusedCardId === "club" ? 100 : (focusedCardId === "team" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="K"
@@ -632,7 +612,7 @@ export default function ContinuousScrollStage() {
                 title="CLUB NAME"
                 isFocused={focusedCardId === "club"}
                 isSiblingFocused={focusedCardId === "team"}
-                onFocusCard={() => setFocusedCardId("club")}
+                onFocusCard={() => handleFocusCard("club", 2)}
                 baseRotate={-6}
                 baseTranslateX={-156}
                 zIndex={focusedCardId === "club" ? 100 : (focusedCardId === "team" ? 50 : 30)}
@@ -645,7 +625,7 @@ export default function ContinuousScrollStage() {
                     type="text"
                     placeholder="Enter Club Name"
                     value={clubName}
-                    onFocus={() => setFocusedCardId("club")}
+                    onFocus={() => handleFocusCard("club", 2)}
                     onChange={(e) => setClubName(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-xs sm:text-sm outline-none"
                   />
@@ -664,7 +644,7 @@ export default function ContinuousScrollStage() {
                 scale: focusedCardId === "team" ? 1 : identityTeamScale,
                 zIndex: focusedCardId === "team" ? 100 : (focusedCardId === "club" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="A"
@@ -673,7 +653,7 @@ export default function ContinuousScrollStage() {
                 title="TEAM NAME"
                 isFocused={focusedCardId === "team"}
                 isSiblingFocused={focusedCardId === "club"}
-                onFocusCard={() => setFocusedCardId("team")}
+                onFocusCard={() => handleFocusCard("team", 2)}
                 baseRotate={6}
                 baseTranslateX={156}
                 zIndex={focusedCardId === "team" ? 100 : (focusedCardId === "club" ? 50 : 30)}
@@ -686,7 +666,7 @@ export default function ContinuousScrollStage() {
                     type="text"
                     placeholder="Enter Squad Name"
                     value={teamName}
-                    onFocus={() => setFocusedCardId("team")}
+                    onFocus={() => handleFocusCard("team", 2)}
                     onChange={(e) => setTeamName(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 font-medium text-xs sm:text-sm outline-none"
                   />
@@ -708,11 +688,7 @@ export default function ContinuousScrollStage() {
               opacity: squadAlphaOpacity,
               y: squadAlphaInY,
             }}
-            className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 3 || focusedCardId === "m0" || focusedCardId === "m1"
-                ? "pointer-events-auto"
-                : "pointer-events-none"
-            }`}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
             {/* Player 1: Web Development ♠ */}
             <motion.div
@@ -722,7 +698,7 @@ export default function ContinuousScrollStage() {
                 scale: focusedCardId === "m0" ? 1 : squadAlphaLeftScale,
                 zIndex: focusedCardId === "m0" ? 100 : (focusedCardId === "m1" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="I"
@@ -731,7 +707,7 @@ export default function ContinuousScrollStage() {
                 title="WEBDEV"
                 isFocused={focusedCardId === "m0"}
                 isSiblingFocused={focusedCardId === "m1"}
-                onFocusCard={() => setFocusedCardId("m0")}
+                onFocusCard={() => handleFocusCard("m0", 3)}
                 baseRotate={-6}
                 baseTranslateX={-156}
                 zIndex={focusedCardId === "m0" ? 100 : (focusedCardId === "m1" ? 50 : 30)}
@@ -745,7 +721,7 @@ export default function ContinuousScrollStage() {
                       type="text"
                       placeholder="e.g. Arisu Ryohei"
                       value={members[0].name}
-                      onFocus={() => setFocusedCardId("m0")}
+                      onFocus={() => handleFocusCard("m0", 3)}
                       onChange={(e) => updateMember(0, "name", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -758,7 +734,7 @@ export default function ContinuousScrollStage() {
                       type="email"
                       placeholder="student@abes.ac.in"
                       value={members[0].email}
-                      onFocus={() => setFocusedCardId("m0")}
+                      onFocus={() => handleFocusCard("m0", 3)}
                       onChange={(e) => updateMember(0, "email", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -770,11 +746,11 @@ export default function ContinuousScrollStage() {
                         e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(0, "isLeader", true);
-                        setFocusedCardId("m0");
+                        handleFocusCard("m0", 3);
                       }}
                       className={`w-full py-1.5 rounded text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
                         members[0].isLeader
-                          ? "bg-amber-500 text-stone-950 shadow ring-1 ring-amber-600"
+                           ? "bg-amber-500 text-stone-950 shadow ring-1 ring-amber-600"
                           : "bg-stone-200 text-stone-700 hover:bg-stone-300"
                       }`}
                     >
@@ -793,7 +769,7 @@ export default function ContinuousScrollStage() {
                 scale: focusedCardId === "m1" ? 1 : squadAlphaRightScale,
                 zIndex: focusedCardId === "m1" ? 100 : (focusedCardId === "m0" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="II"
@@ -802,7 +778,7 @@ export default function ContinuousScrollStage() {
                 title="CYBERSECURITY"
                 isFocused={focusedCardId === "m1"}
                 isSiblingFocused={focusedCardId === "m0"}
-                onFocusCard={() => setFocusedCardId("m1")}
+                onFocusCard={() => handleFocusCard("m1", 3)}
                 baseRotate={6}
                 baseTranslateX={156}
                 zIndex={focusedCardId === "m1" ? 100 : (focusedCardId === "m0" ? 50 : 30)}
@@ -816,7 +792,7 @@ export default function ContinuousScrollStage() {
                       type="text"
                       placeholder="e.g. Yuzuha Usagi"
                       value={members[1].name}
-                      onFocus={() => setFocusedCardId("m1")}
+                      onFocus={() => handleFocusCard("m1", 3)}
                       onChange={(e) => updateMember(1, "name", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -829,7 +805,7 @@ export default function ContinuousScrollStage() {
                       type="email"
                       placeholder="student@abes.ac.in"
                       value={members[1].email}
-                      onFocus={() => setFocusedCardId("m1")}
+                      onFocus={() => handleFocusCard("m1", 3)}
                       onChange={(e) => updateMember(1, "email", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -841,7 +817,7 @@ export default function ContinuousScrollStage() {
                         e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(1, "isLeader", true);
-                        setFocusedCardId("m1");
+                        handleFocusCard("m1", 3);
                       }}
                       className={`w-full py-1.5 rounded text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
                         members[1].isLeader
@@ -867,11 +843,7 @@ export default function ContinuousScrollStage() {
               opacity: squadBravoOpacity,
               y: squadBravoInY,
             }}
-            className={`absolute inset-0 flex items-center justify-center ${
-              activeChapter === 4 || focusedCardId === "m2" || focusedCardId === "m3"
-                ? "pointer-events-auto"
-                : "pointer-events-none"
-            }`}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
             {/* Player 3: Cloud Computing ♦ */}
             <motion.div
@@ -881,7 +853,7 @@ export default function ContinuousScrollStage() {
                 scale: focusedCardId === "m2" ? 1 : squadBravoLeftScale,
                 zIndex: focusedCardId === "m2" ? 100 : (focusedCardId === "m3" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="III"
@@ -890,7 +862,7 @@ export default function ContinuousScrollStage() {
                 title="CLOUD"
                 isFocused={focusedCardId === "m2"}
                 isSiblingFocused={focusedCardId === "m3"}
-                onFocusCard={() => setFocusedCardId("m2")}
+                onFocusCard={() => handleFocusCard("m2", 4)}
                 baseRotate={-6}
                 baseTranslateX={-156}
                 zIndex={focusedCardId === "m2" ? 100 : (focusedCardId === "m3" ? 50 : 30)}
@@ -904,7 +876,7 @@ export default function ContinuousScrollStage() {
                       type="text"
                       placeholder="e.g. Shuntaro Chishiya"
                       value={members[2].name}
-                      onFocus={() => setFocusedCardId("m2")}
+                      onFocus={() => handleFocusCard("m2", 4)}
                       onChange={(e) => updateMember(2, "name", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -917,7 +889,7 @@ export default function ContinuousScrollStage() {
                       type="email"
                       placeholder="student@abes.ac.in"
                       value={members[2].email}
-                      onFocus={() => setFocusedCardId("m2")}
+                      onFocus={() => handleFocusCard("m2", 4)}
                       onChange={(e) => updateMember(2, "email", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -929,7 +901,7 @@ export default function ContinuousScrollStage() {
                         e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(2, "isLeader", true);
-                        setFocusedCardId("m2");
+                        handleFocusCard("m2", 4);
                       }}
                       className={`w-full py-1.5 rounded text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
                         members[2].isLeader
@@ -952,7 +924,7 @@ export default function ContinuousScrollStage() {
                 scale: squadBravoRightScale,
                 zIndex: focusedCardId === "m3" ? 100 : (focusedCardId === "m2" ? 50 : 30),
               }}
-              className="absolute pointer-events-none"
+              className="absolute pointer-events-auto"
             >
               <RoyalDirectCard
                 rank="IV"
@@ -961,7 +933,7 @@ export default function ContinuousScrollStage() {
                 title="NETWORKING"
                 isFocused={focusedCardId === "m3"}
                 isSiblingFocused={focusedCardId === "m2"}
-                onFocusCard={() => setFocusedCardId("m3")}
+                onFocusCard={() => handleFocusCard("m3", 4)}
                 baseRotate={6}
                 baseTranslateX={156}
                 zIndex={focusedCardId === "m3" ? 100 : (focusedCardId === "m2" ? 50 : 30)}
@@ -975,7 +947,7 @@ export default function ContinuousScrollStage() {
                       type="text"
                       placeholder="e.g. Hikari Kuina"
                       value={members[3].name}
-                      onFocus={() => setFocusedCardId("m3")}
+                      onFocus={() => handleFocusCard("m3", 4)}
                       onChange={(e) => updateMember(3, "name", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -988,7 +960,7 @@ export default function ContinuousScrollStage() {
                       type="email"
                       placeholder="student@abes.ac.in"
                       value={members[3].email}
-                      onFocus={() => setFocusedCardId("m3")}
+                      onFocus={() => handleFocusCard("m3", 4)}
                       onChange={(e) => updateMember(3, "email", e.target.value)}
                       className="w-full px-2.5 py-1.5 rounded bg-stone-100 border border-stone-400 focus:border-red-600 text-stone-950 text-xs outline-none"
                     />
@@ -1000,7 +972,7 @@ export default function ContinuousScrollStage() {
                         e.stopPropagation();
                         sounds.playCardClick();
                         updateMember(3, "isLeader", true);
-                        setFocusedCardId("m3");
+                        handleFocusCard("m3", 4);
                       }}
                       className={`w-full py-1.5 rounded text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
                         members[3].isLeader
@@ -1046,7 +1018,7 @@ export default function ContinuousScrollStage() {
                     <div className="flex items-center gap-2.5">
                       <ClubEmblem size={24} />
                       <span className="font-baroque text-lg sm:text-2xl text-zinc-100 font-bold tracking-wide">
-                        Codersland Visa Application
+                        Coderlands Visa Application
                       </span>
                     </div>
                     <div className="text-right font-mono text-xs text-red-400 font-bold tracking-wider">
@@ -1151,10 +1123,10 @@ export default function ContinuousScrollStage() {
                       <ClubEmblem size={28} />
                       <div>
                         <div className="font-techno text-[10px] text-red-800 font-bold uppercase tracking-widest">
-                          CODERSLAND VISA • CONFIRMED
+                          CODERLANDS VISA • CONFIRMED
                         </div>
                         <div className="font-baroque text-2xl text-stone-900">
-                          Coderslands Official Pass
+                          Coderlands Official Pass
                         </div>
                       </div>
                     </div>

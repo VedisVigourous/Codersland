@@ -14,7 +14,7 @@ export default function ArenaIntro({
     <div className="arena-intro">
       <div className="arena-intro-copy">
         <p className="arena-kicker">Interclub technical competition</p>
-        <h1 className="font-baroque">Coderslands</h1>
+        <h1 className="font-baroque">Coderlands</h1>
         <div className="arena-suits" aria-hidden="true">
           <span>♠︎</span>
           <span>♦︎</span>

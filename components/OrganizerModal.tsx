@@ -33,7 +33,7 @@ interface OrganizerModalProps {
 
 // Default Organizer Credentials (can be customized by organizers)
 const VALID_ORGANIZER_ID = "technoAdmin";
-const VALID_PASSKEY = "codersland2k26";
+const VALID_PASSKEY = "coderland2k26";
 
 export default function OrganizerModal({ isOpen = false, onClose }: OrganizerModalProps) {
   // Authentication State
@@ -195,7 +195,7 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
     link.setAttribute("href", encodedUri);
     link.setAttribute(
       "download",
-      `Coderslands_Registrations_${new Date().toISOString().slice(0, 10)}.csv`
+      `Coderlands_Registrations_${new Date().toISOString().slice(0, 10)}.csv`
     );
     document.body.appendChild(link);
     link.click();
@@ -300,7 +300,7 @@ export default function OrganizerModal({ isOpen = false, onClose }: OrganizerMod
               <ClubEmblem size={24} />
               <div>
                 <h3 className="font-sheepman text-xl text-zinc-100 uppercase tracking-wide">
-                  CODERSLANDS ARENA REGISTRATION REGISTRY
+                  CODERLANDS ARENA REGISTRATION REGISTRY
                 </h3>
                 <div className="text-xs text-zinc-400 font-mono">
                   Total Registered Squads: <span className="text-red-400 font-bold">{teams.length}</span> / 30 Target

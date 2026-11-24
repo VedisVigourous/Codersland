@@ -27,7 +27,7 @@ export default function HeroHeader() {
       {/* Main Title: CoderLands in Baroque Blackletter */}
       <div className="relative mb-3">
         <h1 className="font-baroque text-6xl sm:text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 tracking-wide drop-shadow-[0_10px_25px_rgba(255,17,58,0.45)] select-none">
-          Coderslands
+          Coderlands
         </h1>
         {/* Subtle red underglow behind title */}
         <div className="absolute inset-0 -z-10 blur-2xl opacity-40 bg-gradient-to-r from-red-600 via-red-500 to-rose-700" />

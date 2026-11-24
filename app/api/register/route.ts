@@ -33,13 +33,13 @@ export async function POST(req: NextRequest) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error || "Registration rejected by Coderslands." },
+        { error: result.error || "Registration rejected by Coderlands." },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
-      message: "VISA_GRANTED: Application approved for Coderslands arena.",
+      message: "VISA_GRANTED: Application approved for Coderlands arena.",
       team: result.team,
     });
   } catch (err: any) {

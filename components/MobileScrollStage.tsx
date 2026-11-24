@@ -123,6 +123,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row: Corner Indices & Top-Right Filigree */}
@@ -194,6 +195,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row */}
@@ -265,6 +267,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row */}
@@ -365,6 +368,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row */}
@@ -465,6 +469,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row */}
@@ -565,6 +570,7 @@ export default function MobileScrollStage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.45 }}
+          style={{ touchAction: "pan-y" }}
           className="w-[88vw] max-w-[340px] min-h-[460px] rounded-2xl p-5 playing-card-parchment foil-glitter flex flex-col justify-between border-2 border-stone-400/60 shadow-2xl relative"
         >
           {/* Top Row */}
@@ -664,6 +670,7 @@ export default function MobileScrollStage({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.4 }}
+              style={{ touchAction: "pan-y" }}
               className="arena-dossier rounded-2xl p-5 sm:p-6 bg-[#0d090d]/95 backdrop-blur-xl border-2 border-red-900/60 shadow-[0_0_50px_rgba(255,17,58,0.25),0_25px_60px_rgba(0,0,0,0.95)] relative overflow-hidden"
             >
               {/* Single Line Header: Logo (Left) | Codersland Visa Application (Center) | Date (Right) */}
@@ -671,7 +678,7 @@ export default function MobileScrollStage({
                 <div className="flex items-center gap-2">
                   <ClubEmblem size={22} />
                   <span className="font-baroque text-base sm:text-lg text-zinc-100 font-bold tracking-wide">
-                    Codersland Visa Application
+                    Coderlands Visa Application
                   </span>
                 </div>
                 <div className="text-right font-mono text-[11px] text-red-400 font-bold tracking-wider">
@@ -779,10 +786,10 @@ export default function MobileScrollStage({
                   <ClubEmblem size={24} />
                   <div>
                     <div className="font-techno text-[9px] text-red-800 font-bold uppercase tracking-widest">
-                      CODERSLAND VISA • CONFIRMED
+                      CODERLANDS VISA • CONFIRMED
                     </div>
                     <div className="font-baroque text-xl text-stone-900">
-                      Coderslands Official Pass
+                      Coderlands Official Pass
                     </div>
                   </div>
                 </div>

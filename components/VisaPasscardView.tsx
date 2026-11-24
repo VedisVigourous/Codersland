@@ -120,7 +120,7 @@ export default function VisaPasscardView({
         });
       }
 
-      const filename = `Coderslands_Visa_${registeredTeam.id || "Pass"}.png`;
+      const filename = `Coderlands_Visa_${registeredTeam.id || "Pass"}.png`;
 
       // Convert dataUrl to Blob
       const res = await fetch(dataUrl);
@@ -143,7 +143,7 @@ export default function VisaPasscardView({
         try {
           await navigator.share({
             files: [file],
-            title: "Coderslands Official Visa Pass",
+            title: "Coderlands Official Visa Pass",
           });
           sounds.playVisaGranted();
           setIsDownloading(false);
@@ -184,7 +184,7 @@ export default function VisaPasscardView({
 
   const copyCredentials = () => {
     sounds.playCardClick();
-    const text = `CODERSLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
+    const text = `CODERLANDS 2026 - VISA GRANTED\nTeam: ${registeredTeam.teamName} (${registeredTeam.clubName})\nTeam ID: ${registeredTeam.id}\nPasscode: ${registeredTeam.passcode}\nVenue: Seminar Hall 1 (Raman Block)`;
     navigator.clipboard.writeText(text);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 3000);
@@ -193,7 +193,7 @@ export default function VisaPasscardView({
   return (
     <div className="arena-visa relative min-h-screen w-full text-zinc-100 flex flex-col justify-between items-center py-2 px-3 sm:px-4 select-none overflow-x-hidden">
       {/* =================================================================== */}
-      {/* COMPACT CENTERED CODERSLANDS HEADER (NO NAVBAR)                    */}
+      {/* COMPACT CENTERED CODERLANDS HEADER (NO NAVBAR)                     */}
       {/* =================================================================== */}
       <header className="flex flex-col items-center justify-center pt-1 pb-1 relative z-40">
         <div className="flex items-center gap-1.5 mb-0.5">
@@ -203,7 +203,7 @@ export default function VisaPasscardView({
           </span>
         </div>
         <h1 className="font-baroque text-3xl sm:text-4xl text-zinc-100 tracking-wide leading-tight drop-shadow-[0_5px_15px_rgba(255,17,58,0.4)]">
-          Coderslands
+          Coderlands
         </h1>
       </header>
 
@@ -259,7 +259,7 @@ export default function VisaPasscardView({
               <div className="flex items-center gap-1.5">
                 <ClubEmblem size={20} />
                 <span className="font-baroque text-sm sm:text-base font-bold text-stone-950 leading-none">
-                  CodersLands Official Pass
+                  Coderlands Official Pass
                 </span>
               </div>
             </div>
@@ -381,7 +381,7 @@ export default function VisaPasscardView({
               <span className="text-stone-500">Raman Block · 26–27 Nov</span>
             </div>
             <div className="flex flex-col text-right">
-              <span className="font-bold text-red-700 uppercase tracking-wide">CODERSLAND VISA</span>
+              <span className="font-bold text-red-700 uppercase tracking-wide">CODERLANDS VISA</span>
               <span className="text-stone-500 font-semibold">1 Team Visa • Active</span>
             </div>
           </div>
@@ -459,7 +459,7 @@ export default function VisaPasscardView({
             </div>
             <img
               src={previewImage}
-              alt="CodersLands Visa Card"
+              alt="Coderlands Visa Card"
               className="w-full max-w-[240px] rounded-xl shadow-2xl border border-stone-400 mb-2"
             />
             <p className="text-[10px] font-mono text-zinc-300 mb-3 leading-relaxed">
@@ -477,7 +477,7 @@ export default function VisaPasscardView({
 
       {/* Compact Footer */}
       <footer className="relative z-40 text-center py-1 border-t border-red-950/40 text-[9px] font-mono text-zinc-600">
-        <span>CODERSLANDS 2026 • TECHNOVATION CLUB • RAMAN BLOCK</span>
+        <span>CODERLANDS 2026 • TECHNOVATION CLUB • RAMAN BLOCK</span>
       </footer>
     </div>
   );

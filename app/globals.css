@@ -490,7 +490,24 @@
   border: 1px solid var(--arena-line);
   background: linear-gradient(150deg, #2a2427, #171516 65%);
   scrollbar-color: #8f665b #1b1718;
-  overscroll-behavior: contain;
+}
+
+/* Ensure mobile cards allow native vertical scrolling when swiped directly */
+.arena-page .arena-compact,
+.arena-page .arena-compact-stage,
+.arena-page .playing-card-parchment,
+.arena-page .arena-dossier {
+  touch-action: pan-y !important;
+}
+
+.arena-compact .foil-glitter {
+  overflow: visible !important;
+}
+
+.arena-compact input,
+.arena-compact select,
+.arena-compact button {
+  touch-action: manipulation;
 }
 
 .arena-desktop-view .arena-dossier { max-height: calc(100vh - 9rem); }
